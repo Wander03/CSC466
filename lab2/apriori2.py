@@ -12,6 +12,7 @@ def check_row(data, i, n, c):
 def get_sup(data, n, minSup):
   sup = data.sum()/n
   if sup >= minSup:
+    print(data.name, sup)
     return data.name
   return None
 
@@ -64,6 +65,7 @@ def Apriori(T, minSup):
     for l in range(len(C)):
       if sups[l] >= minSup:
         F[k] += [C[l]]
+        print(sups[l])
     k += 1
     F[k] = []
 

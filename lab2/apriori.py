@@ -49,22 +49,22 @@ def get_skyline(F, k):
 
 #   return(C)
 
-def candidateGen(F,k):
+def candidateGen(F, k):
   C = []
   for i in F[k]:
     for j in F[k]:
-      if (len(i) == k and len(j) == k):
-        c = (i).union(j)
+      if(len(i[0]) == k and len(j[0]) == k):
+        c = (i[0]).union(j[0])
         flag = True
         if len(c) == k + 1:
           for l in range(k+1):
             s = list(c)[:l] + list(c)[l+1:]
-            if set(s) not in F[k]:
+            if(set(s) not in (f[0] for f in F[k])):
               flag = False
-          if flag == True:
-            if c not in C:
-              C += [c]
-  return C
+          if(flag and c not in C):
+            C += [c]
+
+  return(C)
 
 def Apriori(df, minSup):
   """
