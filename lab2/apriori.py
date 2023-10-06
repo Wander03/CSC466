@@ -55,7 +55,6 @@ def Apriori(df, minSup):
   k = 2
   F = {1: []}
   df.apply(lambda col: get_initial_freq(col, n, minSup, F))
-
   while(len(F[k-1]) != 0):
     C = candidateGen(F, k-1)
     c_count = [0] * len(C)
@@ -84,9 +83,28 @@ def genRules(df, F, minConf):
 
   return(H)
 
+def out_goods(data, rules):
+  df_map = pd.read_csv(data)
+  df_map["Flavor"] = df_map["Flavor"].str.replace("'", "")
+  df_map["Food"] = df_map["Food"].str.replace("'", "")
+  df_map["Item"] = df_map["Flavor"] + " " + df_map["Food"]
+  print(df_map.head())
+
+def out_bingo(data, rules):
+  df_map = pd.read_csv(data, sep="|", header=None, names=["Id", "Author(s)"])
+from datetime import datetime
 if __name__ == "__main__":
-    data, minSup, minConf = argv[1], argv[2], argv[3]
-    df = pd.read_csv(data, header=False)
+    print(datetime.now())
+    data, minSup, minConf, data_map, goods = argv[1], float(argv[2]), float(argv[3]), argv[4], bool(argv[5])
+    df = pd.read_csv(data, header=None)
+    df.drop(df.columns[0], axis=1, inplace=True)
     skyline = Apriori(df, minSup)
+    print(skyline)
+    print(datetime.now())
     rules = genRules(df, skyline, minConf)
     print(rules)
+    print(datetime.now())
+    if(goods):
+      out_goods(data_map, rules)
+    else:
+      out_bingo(data_map, rules)
