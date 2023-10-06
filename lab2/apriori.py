@@ -80,7 +80,7 @@ def genRules(df, F, minConf):
         temp_f.remove(s)
         sup_d = df[list(temp_f)].apply(lambda row: 1 if sum(row) == len(row) else 0, axis=1).sum()
         if(sup_n / sup_d >= minConf):
-          H += [([temp_f, s, f[1], sup_n / sup_d])]
+          H.append([([temp_f, s, f[1], sup_n / sup_d])])
 
   return(H)
 
@@ -90,11 +90,10 @@ def out_goods(data, map_data, rules, arg):
   df_map["Food"] = df_map["Food"].str.replace("'", "")
   df_map["Item"] = df_map["Flavor"] + " " + df_map["Food"]
   id_item = df_map.set_index("Id")["Item"].to_dict()
-  rules.reverse()
   
   with open(data.split("\\")[-1] + "-out", "w") as f:
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
-    for i, r in enumerate(rules):
+    for i, r in enumerate(reversed(rules)):
       left = ", ".join([id_item.get(item-1, "Item") for item in r[0]])
       right = id_item.get(r[1]-1, "Item")
 
@@ -102,11 +101,10 @@ def out_goods(data, map_data, rules, arg):
 
 def out_bingo(data, df_map, rules, arg):
   id_item = df_map.set_index("Id")["Author(s)"].to_dict()
-  rules.reverse()
 
   with open(data.split("\\")[-1] + "-out", "w") as f:
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
-    for i, r in enumerate(rules):
+    for i, r in enumerate(reversed(rules)):
       left = ", ".join([id_item.get(item, "Author(s)") for item in r[0]])
       right = id_item.get(r[1], "Author(s)")
 
