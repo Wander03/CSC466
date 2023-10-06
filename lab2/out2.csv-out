@@ -1,4 +1,4 @@
-Output for python3 apriori.py .\test\out2.csv 0.05 0.7 .\goods.csv 1
+Output for python3 apriori.py .\test\out2.csv 0.1 0.7 .\goods.csv 1
 
 Rule 1:    Lemon Cake ---> Single Espresso    [sup=12.7, conf=81.4103]
 Rule 2:    Single Espresso ---> Lemon Cake    [sup=12.7, conf=78.3951]

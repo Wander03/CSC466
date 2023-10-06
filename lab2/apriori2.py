@@ -3,51 +3,17 @@ import numpy as np
 from sys import argv
 from datetime import datetime
 
-# def get_subsets(c):
-#   s = []
-#   c = list(c)
-#   for i in range(len(c)):
-#     s.append(set(c[:i] + c[i+1:]))
-#   return(s)
+def check_row(data, i, n, c):
+  if data.loc[i][c].sum(axis=0) == len(c):
+    return 1/n
+  else:
+    return 0
 
-def count_row(row, C, c_count):
-  for i, c in enumerate(C):
-    if np.sum(row[list(c)]) == len(c):
-      c_count[i] += 1
-
-def get_initial_freq(df, minSup, n):
-  freq = df.sum(axis=0) / n
-  frequent_cols = freq[freq >= minSup].index
-  F = {1: [({col}, freq[col]) for col in frequent_cols]}
-  return(F)
-
-def get_skyline(F, k):
-  F_skyline = []
-
-  for f1 in reversed(F):
-    if(not F_skyline):
-      F_skyline.append(f1)
-    else:
-      flag = True
-      for f2 in F_skyline:
-        inter = f1[0].intersection(f2[0])
-        if(len(inter) == len(f1[0])):
-          flag = False
-      if(flag):
-        F_skyline.append(f1)
-
-  return(F_skyline)
-
-# def candidateGen(F, k):
-#   C = []
-#   for i in F[k]:
-#     for j in F[k]:
-#       c = i[0].union(j[0])
-#       if(len(c) == k + 1 and c not in C):
-#         if any(s in (f[0] for f in F[k]) for s in get_subsets(c)):
-#           C.append(c)
-
-#   return(C)
+def get_sup(data, n, minSup):
+  sup = data.sum()/n
+  if sup >= minSup:
+    return data.name
+  return None
 
 def candidateGen(F,k):
   C = []
@@ -66,41 +32,62 @@ def candidateGen(F,k):
               C += [c]
   return C
 
-def Apriori(df, minSup):
-  """
-  df: Pandas DataFrame of binary market baskets
-  minSup: a float
-  """
-  n = len(df)
+def getSkyline(F, k):
+  F_skyline = []
+  F.reverse()
+  for f1 in F:
+    if(not F_skyline):
+      F_skyline.append(f1)
+    else:
+      flag = True
+      for f2 in F_skyline:
+        inter = f1.intersection(f2)
+        if(len(inter) == len(f1)):
+          flag = False
+      if(flag):
+        F_skyline.append(f1)
+
+  return(F_skyline)
+
+def Apriori(T, minSup):
+  n = T.shape[0]
+  F = {}
+  F[1] = [{item} for item in list(T.apply(get_sup, args=(n, .1), axis=0).dropna())]
+  F[2] = []
   k = 2
-  F = get_initial_freq(df, minSup, n)
-  while(len(F[k-1]) != 0):
+  while F[k-1] != []:
     C = candidateGen(F, k-1)
-    c_count = [0] * len(C)
-    df.apply(lambda row: count_row(row, C, c_count), axis=1)
-    F.update({k: [(c, c_count[i]/n) for i, c in enumerate(C) if c_count[i]/n >= minSup]})
+    sups = [0]*len(C)
+    for i in range(n):
+      for j in range(len(C)):
+        sups[j] += check_row(T, i, n, list(C[j]))
+    for l in range(len(C)):
+      if sups[l] >= minSup:
+        F[k] += [C[l]]
     k += 1
+    F[k] = []
 
-  return(get_skyline([f for s in F.values() for f in s], k-2))
+    lst = list(F.values())
+    flat = [item for sublist in lst for item in sublist]
 
-def genRules(df, F, minConf):
-  """
-  df: Pandas DataFrame of binary market baskets
-  F: dictionary of frequent itemsets
-  minConf: a float
-  """
-  H = []
+  return getSkyline(flat, k-2)
+
+def getConf(T, f, f_min_h):
+  num = (T[f].sum(axis=1)==len(f)).sum()
+  denom = (T[f_min_h].sum(axis=1)==len(f_min_h)).sum()
+  return num/denom
+
+def genRules(T,F,minConf):
+  H1 = []
   for f in F:
-    if(len(f[0]) >= 2):
-      for s in f[0]:
-        temp_f = f[0].copy()
-        sup_n = df[list(temp_f)].apply(lambda row: 1 if sum(row) == len(row) else 0, axis=1).sum()
-        temp_f.remove(s)
-        sup_d = df[list(temp_f)].apply(lambda row: 1 if sum(row) == len(row) else 0, axis=1).sum()
-        if(sup_n / sup_d >= minConf):
-          H.append(([temp_f, s, f[1], sup_n / sup_d]))
-
-  return(H)
+    if len(f) >= 2:
+      for i in range(len(f)):
+        h = list(f)[i]
+        f_min_h = list(f)[:i] + list(f)[i+1:]
+        conf = getConf(T, list(f), f_min_h)
+        if conf >= minConf:
+          H1 += [str(f_min_h) + '-->' + str(h)]
+  return H1
 
 def out_goods(data, map_data, rules, arg):
   df_map = pd.read_csv(map_data)
@@ -153,12 +140,12 @@ if __name__ == "__main__":
     print(skyline)
     print(datetime.now())
 
-    rules = genRules(df, skyline, minConf)
-
-    print(rules)
-    print(datetime.now())
-
-    if(goods):
-      out_goods(data, data_map, rules, argv)
-    else:
-      out_bingo(data, df_map, rules, argv)
+    # rules = genRules(df, skyline, minConf)
+# 
+    # print(rules)
+    # print(datetime.now())
+# 
+    # if(goods):
+    #   out_goods(data, data_map, rules, argv)
+    # else:
+    #   out_bingo(data, df_map, rules, argv)
