@@ -1,0 +1,11 @@
+Output for python3 apriori.py .\test\out2.csv 0.05 0.7 .\goods.csv 1
+
+Rule 1:    Lemon Cake ---> Single Espresso    [sup=12.7, conf=81.4103]
+Rule 2:    Single Espresso ---> Lemon Cake    [sup=12.7, conf=78.3951]
+Rule 3:    Napoleon Cake ---> Gongolais Cookie    [sup=18.1, conf=80.4444]
+Rule 4:    Gongolais Cookie ---> Napoleon Cake    [sup=18.1, conf=84.186]
+Rule 5:    Blackberry Tart ---> Apple Danish    [sup=13.9, conf=75.1351]
+Rule 6:    Apple Danish ---> Blackberry Tart    [sup=13.9, conf=79.8851]
+Rule 7:    Blueberry Tart, Apple Tart ---> Berry Tart    [sup=25.7, conf=99.2278]
+Rule 8:    Blueberry Tart, Berry Tart ---> Apple Tart    [sup=25.7, conf=99.6124]
+Rule 9:    Apple Tart, Berry Tart ---> Blueberry Tart    [sup=25.7, conf=95.8955]

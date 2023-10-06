@@ -1,5 +1,6 @@
 import pandas as pd
 from sys import argv
+from datetime import datetime
 
 def get_subsets(c):
   s = []
@@ -79,32 +80,69 @@ def genRules(df, F, minConf):
         temp_f.remove(s)
         sup_d = df[list(temp_f)].apply(lambda row: 1 if sum(row) == len(row) else 0, axis=1).sum()
         if(sup_n / sup_d >= minConf):
-          H += [([temp_f, s, sup_n / sup_d])]
+          H += [([temp_f, s, f[1], sup_n / sup_d])]
 
   return(H)
 
-def out_goods(data, rules):
-  df_map = pd.read_csv(data)
+def out_goods(data, map_data, rules, arg):
+  df_map = pd.read_csv(map_data)
   df_map["Flavor"] = df_map["Flavor"].str.replace("'", "")
   df_map["Food"] = df_map["Food"].str.replace("'", "")
   df_map["Item"] = df_map["Flavor"] + " " + df_map["Food"]
-  print(df_map.head())
+  id_item = df_map.set_index("Id")["Item"].to_dict()
+  rules.reverse()
+  
+  with open(data.split("\\")[-1] + "-out", "w") as f:
+    f.write(f"Output for python3 {' '.join(arg)}\n\n")
+    for i, r in enumerate(rules):
+      left = ", ".join([id_item.get(item-1, "Item") for item in r[0]])
+      right = id_item.get(r[1]-1, "Item")
 
-def out_bingo(data, rules):
-  df_map = pd.read_csv(data, sep="|", header=None, names=["Id", "Author(s)"])
-from datetime import datetime
+      f.write(f"Rule {i+1}:    {left} ---> {right}    [sup={round(r[2] * 100, 4)}, conf={round(r[3] * 100, 4)}]\n")
+
+def out_bingo(data, df_map, rules, arg):
+  id_item = df_map.set_index("Id")["Author(s)"].to_dict()
+  rules.reverse()
+
+  with open(data.split("\\")[-1] + "-out", "w") as f:
+    f.write(f"Output for python3 {' '.join(arg)}\n\n")
+    for i, r in enumerate(rules):
+      left = ", ".join([id_item.get(item, "Author(s)") for item in r[0]])
+      right = id_item.get(r[1], "Author(s)")
+
+      f.write(f"Rule {i+1}:    {left} ---> {right}    [sup={round(r[2] * 100, 4)}, conf={round(r[3] * 100, 4)}]\n")
+
 if __name__ == "__main__":
     print(datetime.now())
-    data, minSup, minConf, data_map, goods = argv[1], float(argv[2]), float(argv[3]), argv[4], bool(argv[5])
-    df = pd.read_csv(data, header=None)
-    df.drop(df.columns[0], axis=1, inplace=True)
+
+    data, minSup, minConf, data_map, goods = argv[1], float(argv[2]), float(argv[3]), argv[4], bool(int(argv[5]))
+
+    if(goods):
+      df = pd.read_csv(data, header=None)
+      df.drop(df.columns[0], axis=1, inplace=True)
+    else:
+      df_map = pd.read_csv(data_map, sep="|", header=None, names=["Id", "Author(s)"])
+      max_id = df_map["Id"].max()
+      df = pd.DataFrame(columns=range(1, max_id+1))
+      with open(data, "r") as f:
+        lines = f.readlines()
+        for i, line in enumerate(lines):
+          nums = [int(num.strip()) for num in line.split(",")][1:]
+          new_row = pd.DataFrame([{n: 1 if n in nums else 0 for n in range(1, max_id+1)}])
+          df = pd.concat([df, new_row], ignore_index=True)
+        df.drop(df.columns[0], axis=1, inplace=True)
+
     skyline = Apriori(df, minSup)
+
     print(skyline)
     print(datetime.now())
+
     rules = genRules(df, skyline, minConf)
+
     print(rules)
     print(datetime.now())
+
     if(goods):
-      out_goods(data_map, rules)
+      out_goods(data, data_map, rules, argv)
     else:
-      out_bingo(data_map, rules)
+      out_bingo(data, df_map, rules, argv)
