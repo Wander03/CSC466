@@ -106,7 +106,7 @@ def out_bingo(data, df_map, rules, F, arg):
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
 
     for i, f_i in enumerate(F):
-      f.write(f"Freq Itemset {i+1}:    {f_i[0]}    [sup={round(f_i[1] * 100, 4)}]\n")
+      f.write(f"Freq Itemset {i+1}:    {', '.join([id_item.get(item, 'Author(s)') for item in f_i[0]])}    [sup={round(f_i[1] * 100, 4)}]\n")
     
     f.write("\n")
 

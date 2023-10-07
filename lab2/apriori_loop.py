@@ -109,7 +109,7 @@ def out_bingo(data, df_map, rules, F, arg):
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
 
     for i, f_i in enumerate(F):
-      f.write(f"Freq Itemset {i+1}:    {f_i[0]}    [sup={round(f_i[1] * 100, 4)}]\n")
+      f.write(f"Freq Itemset {i+1}:    {', '.join([id_item.get(item, 'Author(s)') for item in f_i[0]])}    [sup={round(f_i[1] * 100, 4)}]\n")
     
     f.write("\n")
 
@@ -153,13 +153,36 @@ def main(argv):
   else:
     out_bingo(data, df_map, rules, argv)
 
-
 if __name__ == "__main__":
   global counter
   counter = 0
   # Edit loop here! (this runs if your directory is in the lab2 file, otherwise change the file paths)
-  for minSup in [".1", ".2"]:
-    argv = ["apriori_loop.py", ".\\test\\out2.csv", minSup, "0", ".\\goods.csv", "1"]
+  start = 0.045
+  end = 0.08
+  step = 0.005
+  current_value = start
+  while current_value < end:
+    argv = ["apriori_loop.py", ".\\1000\\1000-out2.csv", str(current_value), "0", ".\\goods.csv", "1"]
     main(argv)
+    current_value += step
   
+  counter = 0
+  start = 0.045
+  end = 0.08
+  step = 0.005
+  current_value = start
+  while current_value < end:
+    argv = ["apriori_loop.py", ".\\5000\\5000-out2.csv", str(current_value), "0", ".\\goods.csv", "1"]
+    main(argv)
+    current_value += step
+
+  counter = 0
+  start = 0.035
+  end = 0.05
+  step = 0.003
+  current_value = start
+  while current_value < end:
+    argv = ["apriori_loop.py", ".\\75000\\75000-out2.csv", str(current_value), "0", ".\\goods.csv", "1"]
+    main(argv)
+    current_value += step
   
