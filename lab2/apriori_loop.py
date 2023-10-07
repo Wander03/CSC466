@@ -84,13 +84,14 @@ def genRules(df, F, minConf):
   return(H)
 
 def out_goods(data, map_data, rules, arg):
+  global counter
   df_map = pd.read_csv(map_data)
   df_map["Flavor"] = df_map["Flavor"].str.replace("'", "")
   df_map["Food"] = df_map["Food"].str.replace("'", "")
   df_map["Item"] = df_map["Flavor"] + " " + df_map["Food"]
   id_item = df_map.set_index("Id")["Item"].to_dict()
   
-  with open("out\\" + data.split("\\")[-1] + "-out", "w") as f:
+  with open("out\\" + data.split("\\")[-1] + f"-out{counter}", "w") as f:
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
     for i, r in enumerate(reversed(rules)):
       left = ", ".join([id_item.get(item-1, "Item") for item in r[0]])
@@ -98,10 +99,12 @@ def out_goods(data, map_data, rules, arg):
 
       f.write(f"Rule {i+1}:    {left} ---> {right}    [sup={round(r[2] * 100, 4)}, conf={round(r[3] * 100, 4)}]\n")
 
+  counter += 1
+
 def out_bingo(data, df_map, rules, F, arg):
   id_item = df_map.set_index("Id")["Author(s)"].to_dict()
 
-  with open("out\\" + data.split("\\")[-1] + "-out", "w") as f:
+  with open("out\\" + data.split("\\")[-1] + f"-out{counter}", "w") as f:
 
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
 
@@ -148,8 +151,15 @@ def main(argv):
   if(goods):
     out_goods(data, data_map, rules, argv)
   else:
-    out_bingo(data, df_map, rules, skyline, argv)
+    out_bingo(data, df_map, rules, argv)
+
 
 if __name__ == "__main__":
-  main(argv)
+  global counter
+  counter = 0
+  # Edit loop here! (this runs if your directory is in the lab2 file, otherwise change the file paths)
+  for minSup in [".1", ".2"]:
+    argv = ["apriori_loop.py", ".\\test\\out2.csv", minSup, "0", ".\\goods.csv", "1"]
+    main(argv)
+  
   
