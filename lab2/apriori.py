@@ -83,7 +83,7 @@ def genRules(df, F, minConf):
 
   return(H)
 
-def out_goods(data, map_data, rules, arg):
+def out_goods(data, map_data, rules, F, arg):
   df_map = pd.read_csv(map_data)
   df_map["Flavor"] = df_map["Flavor"].str.replace("'", "")
   df_map["Food"] = df_map["Food"].str.replace("'", "")
@@ -92,6 +92,7 @@ def out_goods(data, map_data, rules, arg):
   
   with open("out\\" + data.split("\\")[-1] + "-out", "w") as f:
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
+    f.write(f"Number of Skyline Freq Itemsets: {len(F)}\n\n")
     for i, r in enumerate(reversed(rules)):
       left = ", ".join([id_item.get(item-1, "Item") for item in r[0]])
       right = id_item.get(r[1]-1, "Item")
@@ -104,6 +105,7 @@ def out_bingo(data, df_map, rules, F, arg):
   with open("out\\" + data.split("\\")[-1] + "-out", "w") as f:
 
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
+    f.write(f"Number of Skyline Freq Itemsets: {len(F)}\n\n")
 
     for i, f_i in enumerate(F):
       f.write(f"Freq Itemset {i+1}:    {', '.join([id_item.get(item, 'Author(s)') for item in f_i[0]])}    [sup={round(f_i[1] * 100, 4)}]\n")
@@ -146,7 +148,7 @@ def main(argv):
   print(datetime.now())
 
   if(goods):
-    out_goods(data, data_map, rules, argv)
+    out_goods(data, data_map, rules, skyline, argv)
   else:
     out_bingo(data, df_map, rules, skyline, argv)
 

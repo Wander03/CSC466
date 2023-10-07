@@ -93,6 +93,7 @@ def out_goods(data, map_data, rules, arg):
   
   with open("out\\" + data.split("\\")[-1] + f"-out{counter}", "w") as f:
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
+    f.write(f"Number of Skyline Freq Itemsets: {len(F)}\n\n")
     for i, r in enumerate(reversed(rules)):
       left = ", ".join([id_item.get(item-1, "Item") for item in r[0]])
       right = id_item.get(r[1]-1, "Item")
@@ -107,6 +108,7 @@ def out_bingo(data, df_map, rules, F, arg):
   with open("out\\" + data.split("\\")[-1] + f"-out{counter}", "w") as f:
 
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
+    f.write(f"Number of Skyline Freq Itemsets: {len(F)}\n\n")
 
     for i, f_i in enumerate(F):
       f.write(f"Freq Itemset {i+1}:    {', '.join([id_item.get(item, 'Author(s)') for item in f_i[0]])}    [sup={round(f_i[1] * 100, 4)}]\n")
