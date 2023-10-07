@@ -83,7 +83,7 @@ def genRules(df, F, minConf):
 
   return(H)
 
-def out_goods(data, map_data, rules, arg):
+def out_goods(data, map_data, rules, F, arg):
   global counter
   df_map = pd.read_csv(map_data)
   df_map["Flavor"] = df_map["Flavor"].str.replace("'", "")
