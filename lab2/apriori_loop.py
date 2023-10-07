@@ -151,9 +151,9 @@ def main(argv):
   print(datetime.now())
 
   if(goods):
-    out_goods(data, data_map, rules, argv)
+    out_goods(data, data_map, rules, skyline, argv)
   else:
-    out_bingo(data, df_map, rules, argv)
+    out_bingo(data, df_map, rules, skyline, argv)
 
 if __name__ == "__main__":
   global counter
