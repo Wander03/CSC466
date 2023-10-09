@@ -1,0 +1,28 @@
+Output for python3 apriori_loop,py bingoBaskets.csv 0.19 0 bingo.csv 0
+
+Number of Skyline Freq Itemsets: 21
+
+Freq Itemset 1:     Bancroft, Josiah,  Sanderson, Brandon    [sup=20.5761]
+Freq Itemset 2:     VanderMeer, Jeff    [sup=23.4568]
+Freq Itemset 3:     Valente, Catherynne M.    [sup=20.5761]
+Freq Itemset 4:     Sullivan, Michael J.    [sup=23.0453]
+Freq Itemset 5:     Rowe, Andrew    [sup=24.2798]
+Freq Itemset 6:     Pratchett, Terry    [sup=27.9835]
+Freq Itemset 7:     Novik, Naomi    [sup=26.3374]
+Freq Itemset 8:     Mieville, China    [sup=25.9259]
+Freq Itemset 9:     Lynch, Scott    [sup=19.7531]
+Freq Itemset 10:     Le Guin, Ursula K.    [sup=23.4568]
+Freq Itemset 11:     Lawrence, Mark    [sup=30.8642]
+Freq Itemset 12:     Jemisin, N. K.    [sup=36.214]
+Freq Itemset 13:     Hobb, Robin / Lindholm, Megan    [sup=28.3951]
+Freq Itemset 14:     Gaiman, Neil    [sup=26.749]
+Freq Itemset 15:     Eames, Nicholas    [sup=26.3374]
+Freq Itemset 16:     Chambers, Becky    [sup=20.5761]
+Freq Itemset 17:     Brennan, Marie    [sup=27.572]
+Freq Itemset 18:     Ball, Krista D. / Ball, K.    [sup=20.1646]
+Freq Itemset 19:     Arden, Katherine    [sup=20.5761]
+Freq Itemset 20:     Addison, Katherine / Monette, Sarah    [sup=24.6914]
+Freq Itemset 21:     Aaron, Rachel / Bach, Rachel    [sup=23.4568]
+
+Rule 1:     Bancroft, Josiah --->  Sanderson, Brandon    [sup=20.5761, conf=49.505]
+Rule 2:     Sanderson, Brandon --->  Bancroft, Josiah    [sup=20.5761, conf=49.0196]

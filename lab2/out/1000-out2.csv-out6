@@ -1,0 +1,6 @@
+Output for python3 apriori_loop.py .\1000\1000-out2.csv 0.05499999999999999 0 .\goods.csv 1
+
+Number of Skyline Freq Itemsets: 38
+
+Rule 1:    Truffle Cake ---> Gongolais Cookie    [sup=5.8, conf=56.3107]
+Rule 2:    Gongolais Cookie ---> Truffle Cake    [sup=5.8, conf=53.7037]

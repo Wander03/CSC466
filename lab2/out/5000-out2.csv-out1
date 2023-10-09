@@ -1,0 +1,6 @@
+Output for python3 apriori_loop.py .\5000\5000-out2.csv 0.049999999999999996 0 .\goods.csv 1
+
+Number of Skyline Freq Itemsets: 37
+
+Rule 1:    Cherry Tart ---> Apricot Danish    [sup=5.12, conf=55.6522]
+Rule 2:    Apricot Danish ---> Cherry Tart    [sup=5.12, conf=57.3991]

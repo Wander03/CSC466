@@ -1,0 +1,14 @@
+Output for python3 apriori_loop.py .\1000\1000-out2.csv 0.045 0 .\goods.csv 1
+
+Number of Skyline Freq Itemsets: 37
+
+Rule 1:    Chocolate Cake ---> Chocolate Coffee    [sup=4.7, conf=55.9524]
+Rule 2:    Chocolate Coffee ---> Chocolate Cake    [sup=4.7, conf=55.2941]
+Rule 3:    Napoleon Cake ---> Strawberry Cake    [sup=4.9, conf=54.4444]
+Rule 4:    Strawberry Cake ---> Napoleon Cake    [sup=4.9, conf=53.8462]
+Rule 5:    Truffle Cake ---> Gongolais Cookie    [sup=5.8, conf=56.3107]
+Rule 6:    Gongolais Cookie ---> Truffle Cake    [sup=5.8, conf=53.7037]
+Rule 7:    Cherry Tart ---> Apricot Danish    [sup=4.6, conf=54.7619]
+Rule 8:    Apricot Danish ---> Cherry Tart    [sup=4.6, conf=61.3333]
+Rule 9:    Marzipan Cookie ---> Tuile Cookie    [sup=5.3, conf=58.8889]
+Rule 10:    Tuile Cookie ---> Marzipan Cookie    [sup=5.3, conf=51.9608]

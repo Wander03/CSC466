@@ -1,0 +1,16 @@
+Output for python3 apriori_loop,py bingoBaskets.csv 0.25 0 bingo.csv 0
+
+Number of Skyline Freq Itemsets: 11
+
+Freq Itemset 1:     Sanderson, Brandon    [sup=41.9753]
+Freq Itemset 2:     Pratchett, Terry    [sup=27.9835]
+Freq Itemset 3:     Novik, Naomi    [sup=26.3374]
+Freq Itemset 4:     Mieville, China    [sup=25.9259]
+Freq Itemset 5:     Lawrence, Mark    [sup=30.8642]
+Freq Itemset 6:     Jemisin, N. K.    [sup=36.214]
+Freq Itemset 7:     Hobb, Robin / Lindholm, Megan    [sup=28.3951]
+Freq Itemset 8:     Gaiman, Neil    [sup=26.749]
+Freq Itemset 9:     Eames, Nicholas    [sup=26.3374]
+Freq Itemset 10:     Brennan, Marie    [sup=27.572]
+Freq Itemset 11:     Bancroft, Josiah    [sup=41.5638]
+

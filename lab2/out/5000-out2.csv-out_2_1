@@ -1,0 +1,21 @@
+Output for python3 apriori_loop.py .\5000\5000-out2.csv 0.04 0 .\goods.csv 1
+
+Number of Skyline Freq Itemsets: 38
+
+Rule 1:    Napoleon Cake ---> Strawberry Cake    [sup=4.22, conf=51.5892]
+Rule 2:    Strawberry Cake ---> Napoleon Cake    [sup=4.22, conf=43.9583]
+Rule 3:    Truffle Cake ---> Gongolais Cookie    [sup=4.72, conf=53.8813]
+Rule 4:    Gongolais Cookie ---> Truffle Cake    [sup=4.72, conf=49.4759]
+Rule 5:    Coffee Eclair ---> Apple Pie    [sup=4.06, conf=36.6426]
+Rule 6:    Apple Pie ---> Coffee Eclair    [sup=4.06, conf=51.9182]
+Rule 7:    Coffee Eclair ---> Almond Twist    [sup=4.12, conf=37.1841]
+Rule 8:    Almond Twist ---> Coffee Eclair    [sup=4.12, conf=50.6143]
+Rule 9:    Blueberry Tart ---> Apricot Croissant    [sup=4.4, conf=51.6432]
+Rule 10:    Apricot Croissant ---> Blueberry Tart    [sup=4.4, conf=53.528]
+Rule 11:    Marzipan Cookie ---> Tuile Cookie    [sup=4.96, conf=59.3301]
+Rule 12:    Tuile Cookie ---> Marzipan Cookie    [sup=4.96, conf=49.6994]
+Rule 13:    Cheese Croissant ---> Orange Juice    [sup=4.3, conf=55.8442]
+Rule 14:    Orange Juice ---> Cheese Croissant    [sup=4.3, conf=46.6377]
+Rule 15:    Cherry Tart, Opera Cake ---> Apricot Danish    [sup=4.08, conf=93.578]
+Rule 16:    Cherry Tart, Apricot Danish ---> Opera Cake    [sup=4.08, conf=79.6875]
+Rule 17:    Opera Cake, Apricot Danish ---> Cherry Tart    [sup=4.08, conf=94.4444]

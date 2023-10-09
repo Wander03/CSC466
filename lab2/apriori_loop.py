@@ -91,7 +91,7 @@ def out_goods(data, map_data, rules, F, arg):
   df_map["Item"] = df_map["Flavor"] + " " + df_map["Food"]
   id_item = df_map.set_index("Id")["Item"].to_dict()
   
-  with open("out\\" + data.split("\\")[-1] + f"-out{counter}", "w") as f:
+  with open("out\\" + data.split("\\")[-1] + f"-out_3_{counter}", "w") as f:
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
     f.write(f"Number of Skyline Freq Itemsets: {len(F)}\n\n")
     for i, r in enumerate(reversed(rules)):
@@ -103,9 +103,10 @@ def out_goods(data, map_data, rules, F, arg):
   counter += 1
 
 def out_bingo(data, df_map, rules, F, arg):
+  global counter
   id_item = df_map.set_index("Id")["Author(s)"].to_dict()
 
-  with open("out\\" + data.split("\\")[-1] + f"-out{counter}", "w") as f:
+  with open("out\\" + data.split("\\")[-1] + f"-out_3_{counter}", "w") as f:
 
     f.write(f"Output for python3 {' '.join(arg)}\n\n")
     f.write(f"Number of Skyline Freq Itemsets: {len(F)}\n\n")
@@ -120,6 +121,8 @@ def out_bingo(data, df_map, rules, F, arg):
       right = id_item.get(r[1], "Author(s)")
 
       f.write(f"Rule {i+1}:    {left} ---> {right}    [sup={round(r[2] * 100, 4)}, conf={round(r[3] * 100, 4)}]\n")
+
+  counter += 1
 
 def main(argv):
   print(datetime.now())
@@ -157,34 +160,39 @@ def main(argv):
 
 if __name__ == "__main__":
   global counter
-  counter = 0
-  # Edit loop here! (this runs if your directory is in the lab2 file, otherwise change the file paths)
-  start = 0.045
-  end = 0.08
-  step = 0.005
-  current_value = start
-  while current_value < end:
-    argv = ["apriori_loop.py", ".\\1000\\1000-out2.csv", str(current_value), "0", ".\\goods.csv", "1"]
-    main(argv)
-    current_value += step
+  # counter = 0
+  # # Edit loop here! (this runs if your directory is in the lab2 file, otherwise change the file paths)
+  # start = 0.025
+  # end = 0.08
+  # step = 0.005
+  # current_value = start
+  # while current_value < end:
+  #   argv = ["apriori_loop.py", ".\\1000\\1000-out2.csv", str(current_value), "0", ".\\goods.csv", "1"]
+  #   main(argv)
+  #   current_value += step
   
+  # counter = 0
+  # start = 0.035
+  # end = 0.045
+  # step = 0.005
+  # current_value = start
+  # while current_value < end:
+  #   argv = ["apriori_loop.py", ".\\5000\\5000-out2.csv", str(current_value), "0", ".\\goods.csv", "1"]
+  #   main(argv)
+  #   current_value += step
+  # [.005, .006, .007]
   counter = 0
-  start = 0.045
-  end = 0.08
-  step = 0.005
-  current_value = start
-  while current_value < end:
-    argv = ["apriori_loop.py", ".\\5000\\5000-out2.csv", str(current_value), "0", ".\\goods.csv", "1"]
+  for current_value in [.16, .17, .18, .19]:
+    argv = ["apriori_loop,py", "bingoBaskets.csv", str(current_value), "0", "bingo.csv", "0"]
     main(argv)
-    current_value += step
 
-  counter = 0
-  start = 0.035
-  end = 0.05
-  step = 0.003
-  current_value = start
-  while current_value < end:
-    argv = ["apriori_loop.py", ".\\75000\\75000-out2.csv", str(current_value), "0", ".\\goods.csv", "1"]
-    main(argv)
-    current_value += step
+  # counter = 0
+  # start = 0.047
+  # end = 0.05
+  # step = 0.003
+  # current_value = start
+  # while current_value < end:
+  #   argv = ["apriori_loop.py", ".\\75000\\75000-out2.csv", str(current_value), "0", ".\\goods.csv", "1"]
+  #   main(argv)
+  #   current_value += step
   
