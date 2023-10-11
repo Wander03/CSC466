@@ -11,6 +11,7 @@ def count_row(row, C, c_count):
 
 def get_initial_freq(df, minSup, n):
   freq = df.sum(axis=0) / n
+  print(freq)
   frequent_cols = freq[freq >= minSup].index
   F = {1: [({col}, freq[col]) for col in frequent_cols]}
   return(F)
@@ -136,6 +137,8 @@ def main(argv):
         new_row = pd.DataFrame([{n: 1 if n in nums else 0 for n in range(1, max_id+1)}])
         df = pd.concat([df, new_row], ignore_index=True)
       df.drop(df.columns[0], axis=1, inplace=True)
+      print(df)
+      
 
   skyline = Apriori(df, minSup)
 
