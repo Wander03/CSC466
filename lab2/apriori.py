@@ -1,3 +1,21 @@
+"""
+Course: CSC 466
+
+Quarter: Fall 2023
+
+Assigment: Lab 2
+
+Name(s):
+
+Brendan Callender // bscallen@calpoly.edu
+
+Andrew Kerr // adkerr@calpoly.edu
+
+Description:
+  Run via command line python3 apriori.py <input_data_file> <minSup> <minConf> <translation_data_file> <1 if goods, 0 if bingo>
+  Will output a .txt file containing Count of Skyline Freq Itemsets, Association Rules, and the Skyline Freq Itemsets (only if bingo)
+"""
+
 import pandas as pd
 import numpy as np
 import itertools

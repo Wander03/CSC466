@@ -1,3 +1,20 @@
+"""
+Course: CSC 466
+
+Quarter: Fall 2023
+
+Assigment: Lab 2
+
+Name(s):
+
+Brendan Callender // bscallen@calpoly.edu
+
+Andrew Kerr // adkerr@calpoly.edu
+
+Description:
+  Run via manipulating main(), same information as apriori.py; used to run multiple minSup/minConf's overnight
+  Will output multiple .txt file containing Count of Skyline Freq Itemsets, Association Rules, and the Skyline Freq Itemsets (only if bingo)
+"""
 import pandas as pd
 import numpy as np
 import itertools
