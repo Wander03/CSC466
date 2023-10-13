@@ -8,6 +8,7 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
+    How to run: python3 InduceC45 <input file> <threshold value> <1 if gain ratio, 0 if gain> <OPTIONAL: restriction file>
 """
 import pandas as pd
 import numpy as np
@@ -58,7 +59,8 @@ def C45(D, A, C, threshold, ratio):
         if a is None:
             T = {"leaf": {"decision": D[C].value_counts().index[0], "p": D[C].value_counts(normalize=True).values[0]}}
         else:
-            T = {"node": {"var": a, "edges": []}}
+            plurality = D[C].value_counts(normalize=True)
+            T = {"node": {"var": a, "plurality": plurality.index.tolist()[0], "p": plurality.values[0], "edges": []}}
             for v in D[a].unique():
                 D_v = D[D[a] == v].reset_index(drop=True)
                 edge = {"edge": {"value": v, **C45(D_v, list(set(A) - {a}), C, threshold, ratio)}}
@@ -67,29 +69,23 @@ def C45(D, A, C, threshold, ratio):
     return T
             
 def main(argv):
-    # tree = C45(pd.read_csv(".\\data\\nursery.csv", skiprows=[1, 2]), ["parents","has_nurs","form","children","housing","finance","social","health"], "class", .8, False)
-    # tree = C45(pd.read_csv(".\\data\\adult-stretch.csv", skiprows=[1, 2]), ["Color","Size","Act","Age"], "Inflated", 0, False)
-
-    D = pd.read_csv(argv[1], skiprows=[1, 2])
+    D = pd.read_csv(argv[1], skiprows=[1, 2], dtype=str)
     A = D.columns.to_list()
     C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
     A.remove(C)
     name = argv[1].split("/")[-1]
 
     try:
-        restrict = pd.read_csv(argv[2], header=None, names=["data"])
-        # restrict = restrict["data"].tolist()
-        A = [a for a, v in zip(A, restrict) if v == "1"]
+        restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
+        A = [a for a, v in zip(A, restrict) if v == 1]
     except Exception as e:
         print(e)
+        print("No Restriction File Provided (Using All Columns)")
     
-    print(A)
-    print(restrict["data"])
+    tree = {"dataset": name, **C45(D, A, C, float(argv[2]), int(argv[3]))}
 
-    # tree = {"dataset": name, **C45(D, A, C, 0, False)}
-
-    # with open(f".\\out\\{name[:-4]}Tree.json", "w") as f:
-    #     f.write(json.dumps(tree, indent=4))
+    with open(f".\\out\\{name[:-4]}Tree.json", "w") as f:
+        f.write(json.dumps(tree, indent=4))
 
 if __name__ == "__main__":
     main(argv)

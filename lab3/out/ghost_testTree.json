@@ -1,0 +1,70 @@
+{
+    "dataset": "ghost_test.csv",
+    "node": {
+        "var": "A1",
+        "plurality": "0",
+        "p": 0.5,
+        "edges": [
+            {
+                "edge": {
+                    "value": "a",
+                    "node": {
+                        "var": "A2",
+                        "plurality": "1",
+                        "p": 0.75,
+                        "edges": [
+                            {
+                                "edge": {
+                                    "value": "1",
+                                    "leaf": {
+                                        "decision": "0",
+                                        "p": 0.5
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "2",
+                                    "leaf": {
+                                        "decision": "1",
+                                        "p": 1
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "b",
+                    "node": {
+                        "var": "A2",
+                        "plurality": "0",
+                        "p": 0.75,
+                        "edges": [
+                            {
+                                "edge": {
+                                    "value": "2",
+                                    "leaf": {
+                                        "decision": "0",
+                                        "p": 1
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "3",
+                                    "leaf": {
+                                        "decision": "0",
+                                        "p": 0.5
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
