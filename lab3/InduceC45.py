@@ -79,7 +79,6 @@ def main(argv):
         restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
         A = [a for a, v in zip(A, restrict) if v == 1]
     except Exception as e:
-        print(e)
         print("No Restriction File Provided (Using All Columns)")
     
     tree = {"dataset": name, **C45(D, A, C, float(argv[2]), int(argv[3]))}
