@@ -1,0 +1,7 @@
+{
+    "dataset": "ghost_test.csv",
+    "leaf": {
+        "decision": "0",
+        "p": 0.5
+    }
+}

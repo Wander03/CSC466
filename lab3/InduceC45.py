@@ -71,8 +71,14 @@ def C45(D, A, C, threshold, ratio):
 def main(argv):
     D = pd.read_csv(argv[1], skiprows=[1, 2], dtype=str)
     A = D.columns.to_list()
+    sizes = pd.read_csv(argv[1], skiprows=[0], nrows=1, header=None).iloc[0].to_list()
     C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
+
     A.remove(C)
+    for i, s in enumerate(sizes):
+        if s <= 0:
+            A.remove(A[i])
+    
     name = argv[1].split("/")[-1]
 
     try:
@@ -80,7 +86,7 @@ def main(argv):
         A = [a for a, v in zip(A, restrict) if v == 1]
     except Exception as e:
         print("No Restriction File Provided (Using All Columns)")
-    
+
     tree = {"dataset": name, **C45(D, A, C, float(argv[2]), int(argv[3]))}
 
     with open(f".\\out\\{name[:-4]}Tree.json", "w") as f:
