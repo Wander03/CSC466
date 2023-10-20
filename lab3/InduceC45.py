@@ -8,7 +8,7 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-    How to run: python3 InduceC45 <input file> <threshold value> <1 if gain ratio, 0 if gain> <OPTIONAL: restriction file>
+    How to run: python3 InduceC45 <input file> <threshold value> <1 if gain ratio, 0 if gain> <OPTIONAL: restrictions file>
 """
 import pandas as pd
 import numpy as np
@@ -23,6 +23,7 @@ def entropySub(D, C, a):
 
 def entropy(D):
     p_lst = D.value_counts(normalize=True).values
+    p_lst = np.where(p_lst == 0, 1, p_lst)
     return -1 * np.sum(p_lst * np.log2(p_lst))
 
 def gain(D, C, a):
@@ -73,14 +74,13 @@ def main(argv):
     A = D.columns.to_list()
     sizes = pd.read_csv(argv[1], skiprows=[0], nrows=1, header=None).iloc[0].to_list()
     C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
+    name = argv[1].split("/")[-1] if "/" in argv[1] else argv[1].split("\\")[-1]
 
     A.remove(C)
     for i, s in enumerate(sizes):
         if s <= 0:
             A.remove(A[i])
     
-    name = argv[1].split("/")[-1]
-
     try:
         restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
         A = [a for a, v in zip(A, restrict) if v == 1]

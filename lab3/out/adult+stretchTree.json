@@ -1,0 +1,49 @@
+{
+    "dataset": "adult+stretch.csv",
+    "node": {
+        "var": "Act",
+        "plurality": "F",
+        "p": 0.6,
+        "edges": [
+            {
+                "edge": {
+                    "value": "STRETCH",
+                    "node": {
+                        "var": "Age",
+                        "plurality": "T",
+                        "p": 0.6666666666666666,
+                        "edges": [
+                            {
+                                "edge": {
+                                    "value": "ADULT",
+                                    "leaf": {
+                                        "decision": "T",
+                                        "p": 1
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "CHILD",
+                                    "leaf": {
+                                        "decision": "F",
+                                        "p": 1
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "DIP",
+                    "leaf": {
+                        "decision": "F",
+                        "p": 1
+                    }
+                }
+            }
+        ]
+    }
+}

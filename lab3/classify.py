@@ -8,7 +8,7 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-    How to run: python3 classify.py <input file> <decision tree file> [OPTIONAL: 1 if silent run, 0 if not; DEFAULT = 0]
+    How to run: python3 classify.py <input file> <decision tree file> <OPTIONAL: 1 if silent run, 0 if not>
 """
 import pandas as pd
 from sys import argv
@@ -67,6 +67,11 @@ def predict_contain(data, json, C):
         classified_total += 1
         return pred
 
+def confusion_matrix(D, C, c):
+    D[C] = pd.Categorical(D[C], categories=c)
+    D['pred_class'] = pd.Categorical(D['pred_class'], categories=c)
+    return(pd.crosstab(D[C], D['pred_class']).reindex(columns=c, fill_value=0))
+
 def main(argv):
     global classified_total
     global classified_incorrect
@@ -98,9 +103,7 @@ def main(argv):
             print(f"Overall Accuracy: {round((classified_total - classified_incorrect) / classified_total, 4)}")
             print(f"Overall Error Rate: {round(classified_incorrect / classified_total, 4)}")
             print("\nConfusion Matrix:")
-            D[C] = pd.Categorical(D[C], categories=D[C].unique())
-            D['pred_class'] = pd.Categorical(D['pred_class'], categories=D[C].unique())
-            print(pd.crosstab(D[C], D['pred_class']).reindex(columns=D[C].unique(), fill_value=0))
+            print(confusion_matrix(D, C, D[C].unique()))
         else:
             D['pred_class'] = D.apply(predict_not_contain, args=(T,), axis=1)
             pd.set_option('display.max_rows', None)
