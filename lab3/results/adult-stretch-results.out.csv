@@ -1,0 +1,30 @@
+Output for python3 FILLER ./data/adult-stretch.csv 10 .25 0
+
+Threshold: 0.25
+Using: Gain
+Folds: 10
+
+Overall Confusion Matrix:
+pred_class    F    T
+Inflated            
+F           8.0  0.0
+T           4.0  8.0
+
+Precision:
+pred_class
+F    0.666667
+T    1.000000
+dtype: float64
+
+Recall:
+Inflated
+F    1.000000
+T    0.666667
+dtype: float64
+
+
+Overall Accuracy: 0.8
+Overall Error Rate: 0.2
+
+Average Accuracy: 0.8022
+Average Error Rate: 0.1978

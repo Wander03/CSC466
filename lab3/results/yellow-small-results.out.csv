@@ -1,0 +1,30 @@
+Output for python3 FILLER ./data/yellow-small.csv 10 .25 0
+
+Threshold: 0.25
+Using: Gain
+Folds: 10
+
+Overall Confusion Matrix:
+pred_class     F    T
+Inflated             
+F           10.0  2.0
+T            0.0  8.0
+
+Precision:
+pred_class
+F    1.0
+T    0.8
+dtype: float64
+
+Recall:
+Inflated
+F    0.833333
+T    1.000000
+dtype: float64
+
+
+Overall Accuracy: 0.9
+Overall Error Rate: 0.1
+
+Average Accuracy: 0.9213
+Average Error Rate: 0.0787

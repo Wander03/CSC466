@@ -1,0 +1,244 @@
+{
+    "dataset": "agaricus-lepiota.csv",
+    "node": {
+        "var": "odor",
+        "plurality": "e",
+        "p": 0.517971442639094,
+        "edges": [
+            {
+                "edge": {
+                    "value": "p",
+                    "leaf": {
+                        "decision": "p",
+                        "p": 1
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "a",
+                    "leaf": {
+                        "decision": "e",
+                        "p": 1
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "l",
+                    "leaf": {
+                        "decision": "e",
+                        "p": 1
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "n",
+                    "node": {
+                        "var": "stalk-color-above-ring",
+                        "plurality": "e",
+                        "p": 0.9659863945578231,
+                        "edges": [
+                            {
+                                "edge": {
+                                    "value": "w",
+                                    "node": {
+                                        "var": "spore-print-color",
+                                        "plurality": "e",
+                                        "p": 0.9457364341085271,
+                                        "edges": [
+                                            {
+                                                "edge": {
+                                                    "value": "n",
+                                                    "leaf": {
+                                                        "decision": "e",
+                                                        "p": 1
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "edge": {
+                                                    "value": "k",
+                                                    "leaf": {
+                                                        "decision": "e",
+                                                        "p": 1
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "edge": {
+                                                    "value": "h",
+                                                    "leaf": {
+                                                        "decision": "e",
+                                                        "p": 1
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "edge": {
+                                                    "value": "r",
+                                                    "leaf": {
+                                                        "decision": "p",
+                                                        "p": 1
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "edge": {
+                                                    "value": "w",
+                                                    "node": {
+                                                        "var": "stalk-surface-below-ring",
+                                                        "plurality": "e",
+                                                        "p": 0.9206349206349206,
+                                                        "edges": [
+                                                            {
+                                                                "edge": {
+                                                                    "value": "f",
+                                                                    "leaf": {
+                                                                        "decision": "e",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "edge": {
+                                                                    "value": "s",
+                                                                    "leaf": {
+                                                                        "decision": "e",
+                                                                        "p": 0.9736842105263158
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "edge": {
+                                                                    "value": "y",
+                                                                    "leaf": {
+                                                                        "decision": "p",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "edge": {
+                                                                    "value": "k",
+                                                                    "leaf": {
+                                                                        "decision": "e",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "g",
+                                    "leaf": {
+                                        "decision": "e",
+                                        "p": 1
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "p",
+                                    "leaf": {
+                                        "decision": "e",
+                                        "p": 1
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "e",
+                                    "leaf": {
+                                        "decision": "e",
+                                        "p": 1
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "o",
+                                    "leaf": {
+                                        "decision": "e",
+                                        "p": 1
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "y",
+                                    "leaf": {
+                                        "decision": "p",
+                                        "p": 1
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "n",
+                                    "leaf": {
+                                        "decision": "e",
+                                        "p": 1
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "f",
+                    "leaf": {
+                        "decision": "p",
+                        "p": 1
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "c",
+                    "leaf": {
+                        "decision": "p",
+                        "p": 1
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "y",
+                    "leaf": {
+                        "decision": "p",
+                        "p": 1
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "s",
+                    "leaf": {
+                        "decision": "p",
+                        "p": 1
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "m",
+                    "leaf": {
+                        "decision": "p",
+                        "p": 1
+                    }
+                }
+            }
+        ]
+    }
+}
