@@ -8,7 +8,7 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-    How to run: <training data> <number of folds; 0 = no corss-validation, -1 = all-but-one cross-validation> <OPTIONAL: restictions file>
+    How to run: <training data> <number of folds; 0 = no corss-validation, -1 = all-but-one cross-validation> <threshold value> <OPTIONAL: restictions file>
 """
 import pandas as pd
 import numpy as np
@@ -40,6 +40,7 @@ def main(argv):
     sizes = pd.read_csv(argv[1], skiprows=[0], nrows=1, header=None).iloc[0].to_list()
     C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
     name = argv[1].split("/")[-1]
+    threshold = float(argv[3])
 
     A.remove(C)
     for i, s in enumerate(sizes):
@@ -47,7 +48,7 @@ def main(argv):
             A.remove(A[i])
 
     try:
-        restrict = pd.read_csv(argv[3], header=None).values.tolist()[0]
+        restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
         A = [a for a, v in zip(A, restrict) if v == 1]
     except Exception as e:
         print("No Restriction File Provided (Using All Columns)")
@@ -65,7 +66,7 @@ def main(argv):
         for fold in range(1, n_folds+1):
             D_train = D[D["Fold"] != fold].copy()
             D_test = D[D["Fold"] == fold].copy()
-            T = C45(D_train, A, C, 0, 0)
+            T = C45(D_train, A, C, threshold, 0)
             D_test["pred_class"] = D_test.apply(predict_contain, args=(T,C), axis=1)
             confusion = confusion.add(confusion_matrix(D_test, C, D[C].unique()), fill_value=0)
             accuracy += np.sum(np.diag(confusion)) / np.sum(confusion.to_numpy())
@@ -75,14 +76,14 @@ def main(argv):
         for i in D.index:
             D_train = D[D.index != i].copy()
             D_test = D[D.index == i].copy()
-            T = C45(D_train, A, C, 0, 0)
+            T = C45(D_train, A, C, threshold, 0)
             D_test["pred_class"] = D_test.apply(predict_contain, args=(T,C), axis=1)
             confusion = confusion.add(confusion_matrix(D_test, C, D[C].unique()), fill_value=0)
             accuracy += np.sum(np.diag(confusion)) / np.sum(confusion.to_numpy())
 
     else:
         # No CV
-        T = C45(D, A, C, 0, 0)
+        T = C45(D, A, C, threshold, 0)
         D["pred_class"] = D.apply(predict_contain, args=(T,C), axis=1)
         print(np.diag(confusion_matrix(D, C, D[C].unique())))
         confusion = confusion_matrix(D, C, D[C].unique())
