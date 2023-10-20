@@ -1,4 +1,3 @@
-
 Course: CSC 466
 Quarter: Fall 2023
 Assignment: Lab 3
@@ -26,5 +25,3 @@ How to run validation.py:
 python3 validation.py <training data> <number of folds> <threshold value> <OPTIONAL: restictions file>
 
 <number of folds: 0 = no cross-validation, -1 = all-but-one cross-validation>
-
-
