@@ -70,7 +70,7 @@ def predict_contain(data, json, C):
 def confusion_matrix(D, C, c):
     D[C] = pd.Categorical(D[C], categories=c)
     D['pred_class'] = pd.Categorical(D['pred_class'], categories=c)
-    return(pd.crosstab(D[C], D['pred_class']).reindex(columns=c, fill_value=0))
+    return(pd.crosstab(D[C], D['pred_class']).reindex(index=c, columns=c, fill_value=0))
 
 def main(argv):
     global classified_total
