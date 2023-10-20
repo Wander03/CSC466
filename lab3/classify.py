@@ -8,7 +8,7 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-    
+    How to run: python3 classify.py <input file> <decision tree file> [OPTIONAL: 1 if silent run, 0 if not; DEFAULT = 0]
 """
 import pandas as pd
 from sys import argv
@@ -31,8 +31,8 @@ def predict_not_contain(data, json):
                     return e['edge']['leaf']['decision']
                 else:
                     curr_node = e['edge']['node']
-            else:
-                return curr_node['plurality']
+
+        return curr_node['plurality']
             
 def predict_contain(data, json, C):
     global classified_total
@@ -49,6 +49,7 @@ def predict_contain(data, json, C):
     while True:
         data_val = data[curr_node['var']]
         next_nodes = curr_node['edges']
+
         for e in next_nodes:
             if data_val == e['edge']['value']:
                 if 'leaf' in e['edge'].keys():
@@ -59,12 +60,12 @@ def predict_contain(data, json, C):
                     return pred
                 else:
                     curr_node = e['edge']['node']
-            else:
-                pred = curr_node['plurality']
-                if data[C] != pred:
-                    classified_incorrect += 1
-                classified_total += 1
-                return pred
+
+        pred = curr_node['plurality']
+        if data[C] != pred:
+            classified_incorrect += 1
+        classified_total += 1
+        return pred
 
 def main(argv):
     global classified_total
@@ -75,23 +76,36 @@ def main(argv):
     sizes = pd.read_csv(argv[1], skiprows=[0], nrows=1, header=None).iloc[0].to_list()
     C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
     T = pd.read_json(argv[2])
+    
+    try:
+        silent = int(argv[3])
+    except:
+        silent = False
 
     for i, s in enumerate(sizes):
         if s <= 0:
             A.remove(A[i])
 
-    if C in A:
-        D['pred_class'] = D.apply(predict_contain, args=(T,C), axis=1)
-    else:
+    if silent:
         D['pred_class'] = D.apply(predict_not_contain, args=(T,), axis=1)
-
-    print(f"Overall Accuracy: {(classified_total - classified_incorrect) / classified_total}")
-    print(f"Error Rate: {classified_incorrect / classified_total }")
-
-    if C in A:
-        D[C] = pd.Categorical(D[C], categories=D[C].unique())
-        D['pred_class'] = pd.Categorical(D['pred_class'], categories=D[C].unique())
-        print(pd.crosstab(D['pred_class'], D[C]).reindex(index=D[C].unique(), fill_value=0))
+        pd.set_option('display.max_rows', None)
+        pd.set_option('display.max_columns', None)
+        for i, p in zip(D.index, D.pred_class):
+            print(f"{i}, {p}")
+    else:
+        if C in A:
+            D['pred_class'] = D.apply(predict_contain, args=(T,C), axis=1)
+            print(f"Overall Accuracy: {round((classified_total - classified_incorrect) / classified_total, 4)}")
+            print(f"Overall Error Rate: {round(classified_incorrect / classified_total, 4)}")
+            print("\nConfusion Matrix:")
+            D[C] = pd.Categorical(D[C], categories=D[C].unique())
+            D['pred_class'] = pd.Categorical(D['pred_class'], categories=D[C].unique())
+            print(pd.crosstab(D[C], D['pred_class']).reindex(columns=D[C].unique(), fill_value=0))
+        else:
+            D['pred_class'] = D.apply(predict_not_contain, args=(T,), axis=1)
+            pd.set_option('display.max_rows', None)
+            pd.set_option('display.max_columns', None)
+            print(D)
 
 if __name__ == "__main__":
     main(argv)
