@@ -1,0 +1,49 @@
+{
+    "dataset": "yellow-small.csv",
+    "node": {
+        "var": "Color",
+        "plurality": "F",
+        "p": 0.6,
+        "edges": [
+            {
+                "edge": {
+                    "value": "YELLOW",
+                    "node": {
+                        "var": "Size",
+                        "plurality": "T",
+                        "p": 0.6666666666666666,
+                        "edges": [
+                            {
+                                "edge": {
+                                    "value": "SMALL",
+                                    "leaf": {
+                                        "decision": "T",
+                                        "p": 1
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "value": "LARGE",
+                                    "leaf": {
+                                        "decision": "F",
+                                        "p": 1
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "value": "PURPLE",
+                    "leaf": {
+                        "decision": "F",
+                        "p": 1
+                    }
+                }
+            }
+        ]
+    }
+}

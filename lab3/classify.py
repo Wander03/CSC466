@@ -20,7 +20,7 @@ classified_incorrect = 0
 def predict_not_contain(data, json):
     if 'leaf' in json.keys():
         return json['leaf']['decision']
-    
+
     curr_node = json['node']
     while True:
         data_val = data[curr_node['var']]
@@ -85,12 +85,13 @@ def main(argv):
     else:
         D['pred_class'] = D.apply(predict_not_contain, args=(T,), axis=1)
 
-    print(D)
-    print(classified_total)
-    print(classified_incorrect)
-
     print(f"Overall Accuracy: {(classified_total - classified_incorrect) / classified_total}")
-    # print(f"Error Rate: {(classified_total - classified_incorrect) / }")
+    print(f"Error Rate: {classified_incorrect / classified_total }")
+
+    if C in A:
+        D[C] = pd.Categorical(D[C], categories=D[C].unique())
+        D['pred_class'] = pd.Categorical(D['pred_class'], categories=D[C].unique())
+        print(pd.crosstab(D['pred_class'], D[C]).reindex(index=D[C].unique(), fill_value=0))
 
 if __name__ == "__main__":
     main(argv)
