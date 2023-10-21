@@ -72,7 +72,7 @@ def main(argv):
     error = []
     if n_folds > 0:
         # V-Fold CV
-        D = D.sample(frac=1, random_state=43)
+        D = D.sample(frac=1)
         fold_size = len(D) // n_folds
         D["Fold"] = np.append(np.repeat(range(1, n_folds+1), fold_size), np.repeat(n_folds, len(D) % n_folds))
 
