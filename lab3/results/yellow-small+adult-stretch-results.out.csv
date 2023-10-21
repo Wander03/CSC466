@@ -5,26 +5,26 @@ Using: Gain
 Folds: 10
 
 Overall Confusion Matrix:
-pred_class    F    T
+pred_class    T    F
 Inflated            
-F           7.0  2.0
-T           5.0  2.0
+T           0.0  7.0
+F           0.0  9.0
 
 Precision:
 pred_class
-F    0.583333
-T    0.500000
+T    0.0000
+F    0.5625
 dtype: float64
 
 Recall:
 Inflated
-F    0.777778
-T    0.285714
+T    0.0
+F    1.0
 dtype: float64
 
 
 Overall Accuracy: 0.5625
 Overall Error Rate: 0.4375
 
-Average Accuracy: 0.5859
-Average Error Rate: 0.4141
+Average Accuracy: 0.4113
+Average Error Rate: 0.5887

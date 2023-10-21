@@ -26,5 +26,5 @@ dtype: float64
 Overall Accuracy: 0.9852
 Overall Error Rate: 0.0148
 
-Average Accuracy: 0.985
-Average Error Rate: 0.015
+Average Accuracy: 0.9847
+Average Error Rate: 0.0153

@@ -5,19 +5,19 @@ Using: Gain
 Folds: 10
 
 Overall Confusion Matrix:
-pred_class  spec_prior  priority  not_recom  very_recom  recommend
+pred_class  spec_prior  not_recom  priority  very_recom  recommend
 class                                                             
-spec_prior      2466.0    1578.0        0.0         0.0        0.0
-priority        1854.0    2412.0        0.0         0.0        0.0
-not_recom          0.0       0.0     4320.0         0.0        0.0
-very_recom         0.0     328.0        0.0         0.0        0.0
-recommend          0.0       2.0        0.0         0.0        0.0
+spec_prior      2466.0        0.0    1578.0         0.0        0.0
+not_recom          0.0     4320.0       0.0         0.0        0.0
+priority        1854.0        0.0    2412.0         0.0        0.0
+very_recom         0.0        0.0     328.0         0.0        0.0
+recommend          0.0        0.0       2.0         0.0        0.0
 
 Precision:
 pred_class
 spec_prior    0.570833
-priority      0.558333
 not_recom     1.000000
+priority      0.558333
 very_recom    0.000000
 recommend     0.000000
 dtype: float64
@@ -25,8 +25,8 @@ dtype: float64
 Recall:
 class
 spec_prior    0.609792
-priority      0.565401
 not_recom     1.000000
+priority      0.565401
 very_recom    0.000000
 recommend     0.000000
 dtype: float64
@@ -35,5 +35,5 @@ dtype: float64
 Overall Accuracy: 0.7097
 Overall Error Rate: 0.2903
 
-Average Accuracy: 0.7157
-Average Error Rate: 0.2843
+Average Accuracy: 0.7133
+Average Error Rate: 0.2867

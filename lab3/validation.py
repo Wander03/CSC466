@@ -98,7 +98,6 @@ def main(argv):
         # No CV
         T = C45(D, A, C, threshold, gain)
         D["pred_class"] = D.apply(predict_contain, args=(T,C), axis=1)
-        print(np.diag(confusion_matrix(D, C, D[C].unique())))
         confusion = confusion_matrix(D, C, D[C].unique())
         accuracy.append(np.sum(np.diag(confusion)) / np.sum(confusion.to_numpy()))
 
@@ -106,7 +105,7 @@ def main(argv):
 
     with open(f".\\results\\{name[:-4]}-results.out.csv", "w") as f:
         f.write(f"Output for python3 {' '.join(argv)}\n\n")
-        f.write(f"Threshold: {threshold}\nUsing: {'Gain' if gain == 0 else 'Gain Ratio'}\nFolds: {n_folds}\n\n")
+        f.write(f"Threshold: {threshold}\nUsing: {'Gain' if gain == 0 else 'Gain Ratio'}\nFolds: {n_folds if n_folds >= 0 else 'all-but-one'}\n\n")
         f.write(f"Overall Confusion Matrix:\n{confusion}\n\n")
         f.write(f"Precision:\n{metrics[0]}\n\n")
         f.write(f"Recall:\n{metrics[1]}\n\n\n")
