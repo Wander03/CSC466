@@ -29,21 +29,54 @@ def entropy(D):
 def gain(D, C, a):
     return entropy(D[C]) - entropySub(D, C, a)
 
-def selectSplittingAttribute(D, A, C, threshold, ratio=False):
-    if ratio:
-        G = [gain(D, C, a) / entropy(D[a]) for a in A]
-    else:
-        G = [gain(D, C, a) for a in A]
+def findBestSplit(D, C, a, ratio=False):
+    p0 = entropy(D[C])
+    props = D.groupby(a)[C].value_counts().sort_index()
+    alphas = props.index.get_level_values(0).unique()
+    pk = np.cumsum(props.unstack().fillna(0).to_numpy(), axis=0)
+    n = D.shape[0]
 
-    best = G.index(max(G))
-    return A[best] if G[best] > threshold else None
+    gain_lst = []
+    for r in range(0, pk.shape[0]-1):
+        p_lst_lower = np.sum(pk[:r+1], axis=0) / np.sum(pk[:r+1])
+        p_lst_lower = np.where(p_lst_lower == 0, 1, p_lst_lower)
+        entropy_lower = np.sum(pk[:r+1])/n * (-1*np.sum(p_lst_lower * np.log2(p_lst_lower)))
+
+        p_lst_upper = np.sum(pk[r+1:], axis=0) / np.sum(pk[r+1:])
+        p_lst_upper = np.where(p_lst_upper == 0, 1, p_lst_upper)
+        entropy_upper = (n-np.sum(pk[r+1:]))/n * (-1*np.sum(p_lst_upper * np.log2(p_lst_upper)))
+
+        gain_lst.append(p0 - (entropy_lower + entropy_upper))
+
+    best = gain_lst.index(max(gain_lst))
+    return (alphas[best], gain_lst[best]) if not ratio else (alphas[best], gain_lst[best], entropy_lower + entropy_upper)
+
+def selectSplittingAttribute(D, A, C, threshold, ratio=False):
+    G = dict()
+    if ratio:
+        for a in A.keys():
+            if A[a] == 0:
+                alpha, gain, entropy = findBestSplit(D, C, a)
+                G[a] = gain / entropy
+            else:
+                G[a] = gain(D, C, a) / entropy(D[a])
+    else:
+        for a in A.keys():
+            if A[a] == 0:
+                alpha, gain = findBestSplit(D, C, a)
+                G[a] = gain
+            else:
+                G[a] = gain(D, C, a)
+
+    best = max(G, key=lambda k: G[k])
+    return best if G[best] > threshold else None
         
 
 def C45(D, A, C, threshold, ratio):
     """
     Inputs:
         D - Pandas DataFrame of training data
-        A - List of Attributes
+        A - Dict of Attributes, Type (if Type > 0 cat, else quant)
         C - String of DataFrame column with class variable
         threshold - Minimum accepted entropy
 
@@ -52,7 +85,7 @@ def C45(D, A, C, threshold, ratio):
     """
     if len(D[C].unique()) == 1:
         T = {"leaf": {"decision": D[C][0], "p": 1}}
-    elif not A:
+    elif not A.keys():
         T = {"leaf": {"decision": D[C].value_counts().index[0], "p": D[C].value_counts(normalize=True).values[0]}}
     else:
         a = selectSplittingAttribute(D, A, C, threshold, ratio)
@@ -64,7 +97,9 @@ def C45(D, A, C, threshold, ratio):
             T = {"node": {"var": a, "plurality": plurality.index.tolist()[0], "p": plurality.values[0], "edges": []}}
             for v in D[a].unique():
                 D_v = D[D[a] == v].reset_index(drop=True)
-                edge = {"edge": {"value": v, **C45(D_v, list(set(A) - {a}), C, threshold, ratio)}}
+                A_v = A.copy()
+                del A_v[a]
+                edge = {"edge": {"value": v, **C45(D_v, A_v, C, threshold, ratio)}}
                 T["node"]["edges"].append(edge)
                 
     return T
@@ -76,20 +111,23 @@ def main(argv):
     C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
     name = argv[1].split("/")[-1] if "/" in argv[1] else argv[1].split("\\")[-1]
 
-    A.remove(C)
-    for i, s in enumerate(sizes):
-        if s <= 0:
-            A.remove(A[i])
-    
     try:
         restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
-        A = [a for a, v in zip(A, restrict) if v == 1]
+        for a, v in zip(A.copy(), restrict):
+            if v != 1:
+                A.remove(a)
     except Exception as e:
         print("No Restriction File Provided (Using All Columns)")
 
+    A = dict(zip(A, sizes))
+    del A[C]
+    for k, v in A.copy().items():
+        if v < 0:
+            del A[k]
+
     tree = {"dataset": name, **C45(D, A, C, float(argv[2]), int(argv[3]))}
 
-    with open(f".\\out\\{name[:-4]}Tree.json", "w") as f:
+    with open(f".\\trees\\{name[:-4]}Tree.json", "w") as f:
         f.write(json.dumps(tree, indent=4))
 
 if __name__ == "__main__":

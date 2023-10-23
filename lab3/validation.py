@@ -54,22 +54,24 @@ def main(argv):
     threshold = float(argv[3])
     gain = int(argv[4])
 
-    A.remove(C)
-    for i, s in enumerate(sizes):
-        if s <= 0:
-            A.remove(A[i])
-
     try:
-        restrict = pd.read_csv(argv[5], header=None).values.tolist()[0]
-        A = [a for a, v in zip(A, restrict) if v == 1]
+        restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
+        for a, v in zip(A.copy(), restrict):
+            if v != 1:
+                A.remove(a)
     except Exception as e:
         print("No Restriction File Provided (Using All Columns)")
+
+    A = dict(zip(A, sizes))
+    del A[C]
+    for k, v in A.copy().items():
+        if v < 0:
+            del A[k]
 
     n_folds = int(argv[2])
 
     confusion = pd.DataFrame()
     accuracy = []
-    error = []
     if n_folds > 0:
         # V-Fold CV
         D = D.sample(frac=1)

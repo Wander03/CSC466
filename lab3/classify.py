@@ -87,9 +87,11 @@ def main(argv):
     except:
         silent = False
 
-    for i, s in enumerate(sizes):
-        if s <= 0:
-            A.remove(A[i])
+    A = dict(zip(A, sizes))
+    del A[C]
+    for k, v in A.copy().items():
+        if v < 0:
+            del A[k]
 
     if silent:
         D['pred_class'] = D.apply(predict_not_contain, args=(T,), axis=1)
@@ -98,7 +100,7 @@ def main(argv):
         for i, p in zip(D.index, D.pred_class):
             print(f"{i}, {p}")
     else:
-        if C in A:
+        if C in A.keys():
             D['pred_class'] = D.apply(predict_contain, args=(T,C), axis=1)
             print(f"Overall Accuracy: {round((classified_total - classified_incorrect) / classified_total, 4)}")
             print(f"Overall Error Rate: {round(classified_incorrect / classified_total, 4)}")
@@ -112,6 +114,3 @@ def main(argv):
 
 if __name__ == "__main__":
     main(argv)
-
-
-# QUESTION: how do we know if the input data contains the class variable? --> depending how, how do we know the size of the predicted class? 
