@@ -2,6 +2,7 @@
     "dataset": "nursery.csv",
     "node": {
         "var": "health",
+        "type": 1,
         "plurality": "not_recom",
         "p": 0.3333333333333333,
         "edges": [

@@ -25,14 +25,26 @@ def predict_not_contain(data, json):
     while True:
         data_val = data[curr_node['var']]
         next_nodes = curr_node['edges']
-        for e in next_nodes:
-            if data_val == e['edge']['value']:
-                if 'leaf' in e['edge'].keys():
-                    return e['edge']['leaf']['decision']
-                else:
-                    curr_node = e['edge']['node']
 
-        return curr_node['plurality']
+        flag = False
+        if curr_node["type"]:
+            for e in next_nodes:
+                if data_val == e['edge']['value']:
+                    if 'leaf' in e['edge'].keys():
+                        return e['edge']['leaf']['decision']
+                    else:
+                        curr_node = e['edge']['node']
+                        flag = True
+        else:
+            for e in next_nodes:
+                if eval(f"{data_val} {e['edge']['direction']} {e['edge']['alpha']}"):
+                    if 'leaf' in e['edge'].keys():
+                        return e['edge']['leaf']['decision']
+                    else:
+                        curr_node = e['edge']['node']
+                        flag = True         
+        if flag:
+            return curr_node['plurality']
             
 def predict_contain(data, json, C):
     global classified_total
@@ -49,23 +61,40 @@ def predict_contain(data, json, C):
     while True:
         data_val = data[curr_node['var']]
         next_nodes = curr_node['edges']
+        # print(curr_node)
+        # print(data_val)
 
-        for e in next_nodes:
-            if data_val == e['edge']['value']:
-                if 'leaf' in e['edge'].keys():
-                    pred = e['edge']['leaf']['decision']
-                    if data[C] != pred:
-                        classified_incorrect += 1
-                    classified_total += 1
-                    return pred
-                else:
-                    curr_node = e['edge']['node']
-
-        pred = curr_node['plurality']
-        if data[C] != pred:
-            classified_incorrect += 1
-        classified_total += 1
-        return pred
+        flag = True
+        if curr_node["type"]:
+            for e in next_nodes:
+                if data_val == e['edge']['value']:
+                    if 'leaf' in e['edge'].keys():
+                        pred = e['edge']['leaf']['decision']
+                        if data[C] != pred:
+                            classified_incorrect += 1
+                        classified_total += 1
+                        return pred
+                    else:
+                        curr_node = e['edge']['node']
+                        flag = False
+        else:
+            for e in next_nodes:
+                if eval(f"{data_val} {e['edge']['direction']} {e['edge']['alpha']}"):
+                    if 'leaf' in e['edge'].keys():
+                        pred = e['edge']['leaf']['decision']
+                        if data[C] != pred:
+                            classified_incorrect += 1
+                        classified_total += 1
+                        return pred
+                    else:
+                        curr_node = e['edge']['node']
+                        flag = False
+        if flag:
+            pred = curr_node['plurality']
+            if data[C] != pred:
+                classified_incorrect += 1
+            classified_total += 1
+            return pred
 
 def confusion_matrix(D, C, c):
     D[C] = pd.Categorical(D[C], categories=c)
@@ -88,7 +117,6 @@ def main(argv):
         silent = False
 
     A = dict(zip(A, sizes))
-    del A[C]
     for k, v in A.copy().items():
         if v < 0:
             del A[k]

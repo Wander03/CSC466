@@ -37,26 +37,20 @@ def findBestSplit(D, C, a, ratio=False):
     n = D.shape[0]
 
     if pk.shape[0] == 1:
-        p_lst_lower = np.sum(pk, axis=0) / np.sum(pk)
-        p_lst_lower = np.where(p_lst_lower == 0, 1, p_lst_lower)
-        entropy_lower = np.sum(pk)/n * (-1*np.sum(p_lst_lower * np.log2(p_lst_lower)))
-        return (alphas[0], p0 - entropy_lower) if not ratio else (alphas[0], p0 - entropy_lower, entropy_lower)
+        return (0, 0) if not ratio else (0, 0, 0)
 
     gain_lst = []
     for r in range(0, pk.shape[0]-1):
-        p_lst_lower = np.sum(pk[:r+1], axis=0) / np.sum(pk[:r+1])
+        p_lst_lower = pk[r] / n
         p_lst_lower = np.where(p_lst_lower == 0, 1, p_lst_lower)
-        entropy_lower = np.sum(pk[:r+1])/n * (-1*np.sum(p_lst_lower * np.log2(p_lst_lower)))
-        # print(entropy_lower)
-
-        p_lst_upper = np.sum(pk[r+1:], axis=0) / np.sum(pk[r+1:])
+        entropy_lower = np.sum(pk[r]) / n * (-1*np.sum(p_lst_lower * np.log2(p_lst_lower)))
+        
+        p_lst_upper = (pk[-1]-pk[r]) / n
         p_lst_upper = np.where(p_lst_upper == 0, 1, p_lst_upper)
-        entropy_upper = (n-np.sum(pk[r+1:]))/n * (-1*np.sum(p_lst_upper * np.log2(p_lst_upper)))
-        # print(entropy_upper)
-        # print("")
+        entropy_upper = (n-np.sum(pk[r])) / n * (-1*np.sum(p_lst_upper * np.log2(p_lst_upper)))
+
         gain_lst.append(p0 - (entropy_lower + entropy_upper))
 
-    # breakpoint()
     best = gain_lst.index(max(gain_lst))
     return (alphas[best], gain_lst[best]) if not ratio else (alphas[best], gain_lst[best], entropy_lower + entropy_upper)
 
@@ -65,17 +59,15 @@ def selectSplittingAttribute(D, A, C, threshold, ratio=False):
     if ratio:
         for a in A.keys():
             if A[a] == 0:
-                alpha, gain, entropy = findBestSplit(D, C, a)
-                G[a] = (gain / entropy, alpha)
+                alpha, gain_val, entropy_val = findBestSplit(D, C, a, True)
+                G[a] = (gain_val / entropy_val, alpha) if entropy_val != 0 else (0, alpha)
             else:
                 G[a] = (gain(D, C, a) / entropy(D[a]), None)
     else:
         for a in A.keys():
             if A[a] == 0:
-                alpha, gain = findBestSplit(D, C, a)
-                # print(a)
-                # breakpoint()
-                G[a] = (gain, alpha)
+                alpha, gain_val = findBestSplit(D, C, a)
+                G[a] = (gain_val, alpha)
             else:
                 G[a] = (gain(D, C, a), None)
 
@@ -105,7 +97,7 @@ def C45(D, A, C, threshold, ratio):
             T = {"leaf": {"decision": D[C].value_counts().index[0], "p": D[C].value_counts(normalize=True).values[0]}}
         elif val is None:
             plurality = D[C].value_counts(normalize=True)
-            T = {"node": {"var": a, "plurality": plurality.index.tolist()[0], "p": plurality.values[0], "edges": []}}
+            T = {"node": {"var": a, "type": 1, "plurality": plurality.index.tolist()[0], "p": plurality.values[0], "edges": []}}
             for v in D[a].unique():
                 D_v = D[D[a] == v].reset_index(drop=True)
                 A_v = A.copy()
@@ -114,9 +106,9 @@ def C45(D, A, C, threshold, ratio):
                 T["node"]["edges"].append(edge)
         else:
             plurality = D[C].value_counts(normalize=True)
-            T = {"node": {"var": a, "plurality": plurality.index.tolist()[0], "p": plurality.values[0], "edges": []}}
-            edge1 = {"edge": {"value": f"{a} <= {val}", **C45(D[D[a] <= val].reset_index(drop=True), A, C, threshold, ratio)}}
-            edge2 = {"edge": {"value": f"{a} > {val}", **C45(D[D[a] > val].reset_index(drop=True), A, C, threshold, ratio)}}
+            T = {"node": {"var": a, "type": 0, "plurality": plurality.index.tolist()[0], "p": plurality.values[0], "edges": []}}
+            edge1 = {"edge": {"alpha": val, "direction": "<=", **C45(D[D[a] <= val].reset_index(drop=True), A, C, threshold, ratio)}}
+            edge2 = {"edge": {"alpha": val, "direction": ">", **C45(D[D[a] > val].reset_index(drop=True), A, C, threshold, ratio)}}
             T["node"]["edges"].append(edge1)
             T["node"]["edges"].append(edge2)
 
