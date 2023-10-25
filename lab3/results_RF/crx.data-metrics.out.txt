@@ -1,0 +1,17 @@
+Output for python3 .\randomForest.py .\data2\crx.data.csv 5 250 20 10 0 0
+
+NumAttributes: 5
+NumDataPoints: 250
+NumTrees: 20
+
+Threshold: 0.0
+Using: Gain
+Folds: 10
+
+Confusion Matrix:
+pred_class    -    +
+A16                 
+-           232  151
++           195  112
+
+Accuracy: 0.4986

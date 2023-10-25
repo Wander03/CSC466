@@ -36,7 +36,7 @@ def findBestSplit(D, C, a, ratio=False):
     pk = np.cumsum(props.unstack().fillna(0).to_numpy(), axis=0)
     n = D.shape[0]
 
-    if pk.shape[0] == 1:
+    if pk.shape[0] <= 1:
         return (0, 0) if not ratio else (0, 0, 0)
 
     gain_lst = []
@@ -60,7 +60,7 @@ def selectSplittingAttribute(D, A, C, threshold, ratio=False):
         for a in A.keys():
             if A[a] == 0:
                 alpha, gain_val, entropy_val = findBestSplit(D[D[a] != "?"], C, a, True)
-                G[a] = (gain_val / entropy_val, alpha) if entropy_val != 0 else (np.inf, alpha)
+                G[a] = (gain_val / entropy_val, alpha) if entropy_val != 0 else (0, alpha)
             else:
                 entropy_val = entropy(D[D[a] != "?"])
                 if entropy_val == 0:
@@ -86,6 +86,7 @@ def C45(D, A, C, threshold, ratio):
         A - Dict of Attributes, Type (if Type > 0 cat, else quant)
         C - String of DataFrame column with class variable
         threshold - Minimum accepted entropy
+        ratio - 1 if gain ratio, 0 if gain
 
     Outputs:
         Constructed decision tree 

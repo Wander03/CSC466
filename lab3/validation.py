@@ -9,7 +9,7 @@ Name(s):
 
 Description:
     How to run: 
-    ptyhon3
+    ptyhon3 validation.py
         <training data> 
         <number of folds; 0 = no cross-validation, -1 = all-but-one cross-validation> 
         <threshold value> 
@@ -45,31 +45,7 @@ def compute_metrics(confusion, accuracy):
 
     return [precision.fillna(0), recall.fillna(0), overall_accuracy, overall_error_rate, average_accuracy, average_error_rate]
 
-def main(argv):
-    D = pd.read_csv(argv[1], skiprows=[1, 2], dtype=str)
-    A = D.columns.to_list()
-    sizes = pd.read_csv(argv[1], skiprows=[0], nrows=1, header=None).iloc[0].to_list()
-    C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
-    name = argv[1].split("/")[-1] if "/" in argv[1] else argv[1].split("\\")[-1]
-    threshold = float(argv[3])
-    gain = int(argv[4])
-    
-    try:
-        restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
-        for a, v in zip(A.copy(), restrict):
-            if v != 1:
-                A.remove(a)
-    except Exception as e:
-        print("No Restriction File Provided (Using All Columns)")
-
-    A = dict(zip(A, sizes))
-    del A[C]
-    for k, v in A.copy().items():
-        if v < 0:
-            del A[k]
-
-    n_folds = int(argv[2])
-
+def V_fold_CV(D, A, C, threshold, gain, n_folds):
     confusion = pd.DataFrame()
     accuracy = []
     if n_folds > 0:
@@ -102,10 +78,37 @@ def main(argv):
         D["pred_class"] = D.apply(predict_contain, args=(T,C), axis=1)
         confusion = confusion_matrix(D, C, D[C].unique())
         accuracy.append(np.sum(np.diag(confusion)) / np.sum(confusion.to_numpy()))
+    
+    return confusion, accuracy
 
+def main(argv):
+    D = pd.read_csv(argv[1], skiprows=[1, 2], dtype=str)
+    A = D.columns.to_list()
+    sizes = pd.read_csv(argv[1], skiprows=[0], nrows=1, header=None).iloc[0].to_list()
+    C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
+    name = argv[1].split("/")[-1] if "/" in argv[1] else argv[1].split("\\")[-1]
+    n_folds = int(argv[2])
+    threshold = float(argv[3])
+    gain = int(argv[4])
+    
+    try:
+        restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
+        for a, v in zip(A.copy(), restrict):
+            if v != 1:
+                A.remove(a)
+    except Exception as e:
+        print("No Restriction File Provided (Using All Columns)")
+
+    A = dict(zip(A, sizes))
+    del A[C]
+    for k, v in A.copy().items():
+        if v < 0:
+            del A[k]
+
+    confusion, accuracy = V_fold_CV(D, A, C, threshold, gain, n_folds)
     metrics = compute_metrics(confusion, accuracy)
 
-    with open(f".\\results\\{name[:-4]}-results.out.csv", "w") as f:
+    with open(f".\\results_DT\\{name[:-4]}-results.out.csv", "w") as f:
         f.write(f"Output for python3 {' '.join(argv)}\n\n")
         f.write(f"Threshold: {threshold}\nUsing: {'Gain' if gain == 0 else 'Gain Ratio'}\nFolds: {n_folds if n_folds >= 0 else 'all-but-one'}\n\n")
         f.write(f"Overall Confusion Matrix:\n{confusion}\n\n")
