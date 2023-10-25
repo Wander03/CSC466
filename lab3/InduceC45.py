@@ -59,14 +59,17 @@ def selectSplittingAttribute(D, A, C, threshold, ratio=False):
     if ratio:
         for a in A.keys():
             if A[a] == 0:
-                alpha, gain_val, entropy_val = findBestSplit(D, C, a, True)
+                print(D[a].unique())
+                print(a)
+                print(D[D[a] == 'b'])
+                alpha, gain_val, entropy_val = findBestSplit(D[D[a] != "?"].astype(float), C, a, True)
                 G[a] = (gain_val / entropy_val, alpha) if entropy_val != 0 else (0, alpha)
             else:
                 G[a] = (gain(D, C, a) / entropy(D[a]), None)
     else:
         for a in A.keys():
             if A[a] == 0:
-                alpha, gain_val = findBestSplit(D, C, a)
+                alpha, gain_val = findBestSplit(D[D[a] != "?"].astype(float), C, a)
                 G[a] = (gain_val, alpha)
             else:
                 G[a] = (gain(D, C, a), None)
@@ -134,8 +137,6 @@ def main(argv):
     for k, v in A.copy().items():
         if v < 0:
             del A[k]
-        elif v == 0:
-            D[k] = D[k].astype(float)
 
     tree = {"dataset": name, **C45(D, A, C, float(argv[2]), int(argv[3]))}
 

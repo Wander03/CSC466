@@ -36,8 +36,10 @@ def predict_not_contain(data, json):
                         curr_node = e['edge']['node']
                         flag = True
         else:
+            if data_val == "?":
+                return curr_node['plurality']
             for e in next_nodes:
-                if eval(f"{data_val} {e['edge']['direction']} {e['edge']['alpha']}"):
+                if eval(f"{float(data_val)} {e['edge']['direction']} {float(e['edge']['alpha'])}"):
                     if 'leaf' in e['edge'].keys():
                         return e['edge']['leaf']['decision']
                     else:
@@ -61,8 +63,6 @@ def predict_contain(data, json, C):
     while True:
         data_val = data[curr_node['var']]
         next_nodes = curr_node['edges']
-        # print(curr_node)
-        # print(data_val)
 
         flag = True
         if curr_node["type"]:
@@ -78,8 +78,14 @@ def predict_contain(data, json, C):
                         curr_node = e['edge']['node']
                         flag = False
         else:
+            if data_val == "?":
+                pred = curr_node['plurality']
+                if data[C] != pred:
+                    classified_incorrect += 1
+                classified_total += 1
+                return pred
             for e in next_nodes:
-                if eval(f"{data_val} {e['edge']['direction']} {e['edge']['alpha']}"):
+                if eval(f"{float(data_val)} {e['edge']['direction']} {float(e['edge']['alpha'])}"):
                     if 'leaf' in e['edge'].keys():
                         pred = e['edge']['leaf']['decision']
                         if data[C] != pred:
@@ -110,7 +116,7 @@ def main(argv):
     sizes = pd.read_csv(argv[1], skiprows=[0], nrows=1, header=None).iloc[0].to_list()
     C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
     T = pd.read_json(argv[2])
-    
+    print(D)
     try:
         silent = int(argv[3])
     except:

@@ -53,7 +53,7 @@ def main(argv):
     name = argv[1].split("/")[-1] if "/" in argv[1] else argv[1].split("\\")[-1]
     threshold = float(argv[3])
     gain = int(argv[4])
-
+    
     try:
         restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
         for a, v in zip(A.copy(), restrict):
