@@ -1,7 +1,103 @@
 {
     "dataset": "crx.data.csv",
-    "leaf": {
-        "decision": "-",
-        "p": 0.5550724637681159
+    "node": {
+        "var": "A11",
+        "type": 0,
+        "plurality": "-",
+        "p": 0.5550724637681159,
+        "edges": [
+            {
+                "edge": {
+                    "alpha": 2.0,
+                    "direction": "<=",
+                    "leaf": {
+                        "decision": "-",
+                        "p": 0.7025440313111546
+                    }
+                }
+            },
+            {
+                "edge": {
+                    "alpha": 2.0,
+                    "direction": ">",
+                    "node": {
+                        "var": "A8",
+                        "type": 0,
+                        "plurality": "+",
+                        "p": 0.8659217877094972,
+                        "edges": [
+                            {
+                                "edge": {
+                                    "alpha": 0.085,
+                                    "direction": "<=",
+                                    "node": {
+                                        "var": "A3",
+                                        "type": 0,
+                                        "plurality": "-",
+                                        "p": 0.6,
+                                        "edges": [
+                                            {
+                                                "edge": {
+                                                    "alpha": 3.75,
+                                                    "direction": "<=",
+                                                    "leaf": {
+                                                        "decision": "-",
+                                                        "p": 1
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "edge": {
+                                                    "alpha": 3.75,
+                                                    "direction": ">",
+                                                    "node": {
+                                                        "var": "A14",
+                                                        "type": 0,
+                                                        "plurality": "+",
+                                                        "p": 0.75,
+                                                        "edges": [
+                                                            {
+                                                                "edge": {
+                                                                    "alpha": 60.0,
+                                                                    "direction": "<=",
+                                                                    "leaf": {
+                                                                        "decision": "+",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "edge": {
+                                                                    "alpha": 60.0,
+                                                                    "direction": ">",
+                                                                    "leaf": {
+                                                                        "decision": "-",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "edge": {
+                                    "alpha": 0.085,
+                                    "direction": ">",
+                                    "leaf": {
+                                        "decision": "+",
+                                        "p": 0.9085365853658537
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
     }
 }

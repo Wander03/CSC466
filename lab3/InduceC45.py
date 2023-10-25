@@ -31,7 +31,7 @@ def gain(D, C, a):
 
 def findBestSplit(D, C, a, ratio=False):
     p0 = entropy(D[C])
-    props = D.groupby(a)[C].value_counts().sort_index()
+    props = D.astype({a: float}).groupby(a)[C].value_counts().sort_index()
     alphas = props.index.get_level_values(0).unique()
     pk = np.cumsum(props.unstack().fillna(0).to_numpy(), axis=0)
     n = D.shape[0]
@@ -59,20 +59,21 @@ def selectSplittingAttribute(D, A, C, threshold, ratio=False):
     if ratio:
         for a in A.keys():
             if A[a] == 0:
-                print(D[a].unique())
-                print(a)
-                print(D[D[a] == 'b'])
-                alpha, gain_val, entropy_val = findBestSplit(D[D[a] != "?"].astype(float), C, a, True)
-                G[a] = (gain_val / entropy_val, alpha) if entropy_val != 0 else (0, alpha)
+                alpha, gain_val, entropy_val = findBestSplit(D[D[a] != "?"], C, a, True)
+                G[a] = (gain_val / entropy_val, alpha) if entropy_val != 0 else (np.inf, alpha)
             else:
-                G[a] = (gain(D, C, a) / entropy(D[a]), None)
+                entropy_val = entropy(D[D[a] != "?"])
+                if entropy_val == 0:
+                    G[a] = (np.inf, None)
+                else:
+                    G[a] = (gain(D[D[a] != "?"], C, a) / entropy_val, None)
     else:
         for a in A.keys():
             if A[a] == 0:
-                alpha, gain_val = findBestSplit(D[D[a] != "?"].astype(float), C, a)
+                alpha, gain_val = findBestSplit(D[D[a] != "?"], C, a)
                 G[a] = (gain_val, alpha)
             else:
-                G[a] = (gain(D, C, a), None)
+                G[a] = (gain(D[D[a] != "?"], C, a), None)
 
     best = max(G, key=lambda k: G[k][0])
     return (best, G[best][1]) if G[best][0] > threshold else (None, None)
@@ -100,6 +101,7 @@ def C45(D, A, C, threshold, ratio):
             T = {"leaf": {"decision": D[C].value_counts().index[0], "p": D[C].value_counts(normalize=True).values[0]}}
         elif val is None:
             plurality = D[C].value_counts(normalize=True)
+            D = D[D[a] != "?"].copy()
             T = {"node": {"var": a, "type": 1, "plurality": plurality.index.tolist()[0], "p": plurality.values[0], "edges": []}}
             for v in D[a].unique():
                 D_v = D[D[a] == v].reset_index(drop=True)
@@ -109,6 +111,8 @@ def C45(D, A, C, threshold, ratio):
                 T["node"]["edges"].append(edge)
         else:
             plurality = D[C].value_counts(normalize=True)
+            D = D[D[a] != "?"].copy()
+            D[a] = D[a].astype(float)
             T = {"node": {"var": a, "type": 0, "plurality": plurality.index.tolist()[0], "p": plurality.values[0], "edges": []}}
             edge1 = {"edge": {"alpha": val, "direction": "<=", **C45(D[D[a] <= val].reset_index(drop=True), A, C, threshold, ratio)}}
             edge2 = {"edge": {"alpha": val, "direction": ">", **C45(D[D[a] > val].reset_index(drop=True), A, C, threshold, ratio)}}

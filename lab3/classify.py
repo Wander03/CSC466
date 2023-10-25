@@ -116,7 +116,7 @@ def main(argv):
     sizes = pd.read_csv(argv[1], skiprows=[0], nrows=1, header=None).iloc[0].to_list()
     C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
     T = pd.read_json(argv[2])
-    print(D)
+
     try:
         silent = int(argv[3])
     except:
