@@ -1,0 +1,12 @@
+Output for python3 knn.py .\data2\crx.data.csv .\data2\crx.data.csv 5 3
+
+Num Neighbors: 5
+Distance Metric: Cosine Similarity
+
+Confusion Matrix:
+pred_class    +    -
+A16                 
++           257   39
+-            28  329
+
+Accuracy: 0.8974

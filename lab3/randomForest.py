@@ -49,6 +49,7 @@ def random_forest_classifier(D, A, C, threshold, gain, m, k, N):
     for n in range(N):
         A_sub = dict(sample(A_lst, m))
         D_sub = D.sample(k, replace=True)
+        print(D_sub)
         forest[n] = C45(D_sub, A_sub, C, threshold, gain)
 
     return forest
