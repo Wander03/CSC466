@@ -129,7 +129,6 @@ def main(argv):
     flag = True
     if argv[1] != argv[2]:
         classify = pd.read_csv(argv[2], skiprows=[1, 2], dtype=str)
-        classify.drop(classify[classify.apply(lambda row: any(row == '?'), axis=1)].index, inplace=True)
         flag = False
 
     K = int(argv[3])
