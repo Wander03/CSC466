@@ -128,7 +128,7 @@ def main(argv):
 
     flag = True
     if argv[1] != argv[2]:
-        classify = pd.read_csv(argv[2], skiprows=[1, 2], dtype=str)
+        classify = pd.read_csv(argv[2], dtype=str)
         flag = False
 
     K = int(argv[3])
@@ -156,19 +156,20 @@ def main(argv):
     confusion = confusion_matrix(D, C, D[C].unique())
     accuracy = np.sum(np.diag(confusion)) / np.sum(confusion.to_numpy())
 
-    with open(f".\\results_KNN\\{name[:-4]}-metrics.out.txt", "w") as f:
-        f.write(f"Output for python3 {' '.join(argv)}\n\n")
-        f.write(f"Num Neighbors: {K}\n")
+    if flag:
+        with open(f".\\results_KNN\\{name[:-4]}-metrics.out.txt", "w") as f:
+            f.write(f"Output for python3 {' '.join(argv)}\n\n")
+            f.write(f"Num Neighbors: {K}\n")
 
-        if dist == 1:
-            f.write("Distance Metric: Eucledian Distance\n\n")
-        elif dist == 2:
-            f.write("Distance Metric: Manhattan Distance\n\n")
-        else:
-            f.write("Distance Metric: Cosine Similarity\n\n")
+            if dist == 1:
+                f.write("Distance Metric: Eucledian Distance\n\n")
+            elif dist == 2:
+                f.write("Distance Metric: Manhattan Distance\n\n")
+            else:
+                f.write("Distance Metric: Cosine Similarity\n\n")
 
-        f.write(f"Confusion Matrix:\n{confusion}\n\n")
-        f.write(f"Accuracy: {round(accuracy, 4)}\n")
+            f.write(f"Confusion Matrix:\n{confusion}\n\n")
+            f.write(f"Accuracy: {round(accuracy, 4)}\n")
 
 if __name__ == "__main__":
     main(argv)

@@ -51,7 +51,6 @@ def predict_not_contain(data, json):
 def predict_contain(data, json, C):
     global classified_total
     global classified_incorrect
-
     if 'leaf' in json.keys():
         pred = json['leaf']['decision']
         if data[C] != pred:

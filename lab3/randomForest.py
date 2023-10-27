@@ -49,7 +49,6 @@ def random_forest_classifier(D, A, C, threshold, gain, m, k, N):
     for n in range(N):
         A_sub = dict(sample(A_lst, m))
         D_sub = D.sample(k, replace=True)
-        print(D_sub)
         forest[n] = C45(D_sub, A_sub, C, threshold, gain)
 
     return forest
@@ -74,29 +73,52 @@ def main(argv):
         if v < 0:
             del A[k]
 
-    # V-Fold creation
-    D = D.sample(frac=1)
-    fold_size = len(D) // n_folds
-    D["Fold"] = np.append(np.repeat(range(1, n_folds+1), fold_size), np.repeat(n_folds, len(D) % n_folds))
-
-    # CV
     votes = np.zeros((D.shape[0], len(D[C].unique())))
     class_to_vote = {value: number for number, value in enumerate(D[C].unique())}
     vote_to_class = {number: value for number, value in enumerate(D[C].unique())}
-    for fold in range(1, n_folds+1):
-        D_train = D[D["Fold"] != fold].copy()
-        D_test = D[D["Fold"] == fold].copy()
 
-        forest = random_forest_classifier(D_train, A, C, threshold, gain, NumAttributes, NumDataPoints, NumTrees)
-        for tree in forest:
-            D_test["pred_class"] = D_test.apply(predict_contain, args=(tree,C), axis=1)
-            D_test["pred_class"] = D_test["pred_class"].map(class_to_vote)
-            for i, row in D_test.iterrows():
-                votes[i, row["pred_class"]] += 1
+    # CV
+    if n_folds > 0:
+        # V-Fold creation
+        D = D.sample(frac=1)
+        fold_size = len(D) // n_folds
+        D["Fold"] = np.append(np.repeat(range(1, n_folds+1), fold_size), np.repeat(n_folds, len(D) % n_folds))
+
+        for fold in range(1, n_folds+1):
+            D_train = D[D["Fold"] != fold].copy()
+            D_test = D[D["Fold"] == fold].copy()
+
+            forest = random_forest_classifier(D_train, A, C, threshold, gain, NumAttributes, NumDataPoints, NumTrees)
+            for tree in forest:
+                D_test["pred_class"] = D_test.apply(predict_contain, args=(tree,C), axis=1)
+                D_test["pred_class"] = D_test["pred_class"].map(class_to_vote)
+                for i, row in D_test.iterrows():
+                    votes[i, row["pred_class"]] += 1
+        D.drop("Fold", axis=1, inplace=True)
+
+    elif n_folds == -1: 
+        # all-but-one CV
+        for i in D.index:
+            D_train = D[D.index != i].copy()
+            D_test = D[D.index == i].copy()
+            forest = random_forest_classifier(D_train, A, C, threshold, gain, NumAttributes, NumDataPoints, NumTrees)
+            for tree in forest:
+                D_test["pred_class"] = D_test.apply(predict_contain, args=(tree,C), axis=1)
+                D_test["pred_class"] = D_test["pred_class"].map(class_to_vote)
+                for i, row in D_test.iterrows():
+                    votes[i, row["pred_class"]] += 1
+
+    else:
+        # No CV
+        forest = random_forest_classifier(D, A, C, threshold, gain, NumAttributes, NumDataPoints, NumTrees)
+
+        D["pred_class"] = D.apply(predict_contain, args=(forest[0],C), axis=1)
+        D["pred_class"] = D["pred_class"].map(class_to_vote)
+        for i, row in D.iterrows():
+            votes[i, row["pred_class"]] += 1
 
     plurality_votes = np.vectorize(vote_to_class.get)(np.argmax(votes, axis=1))
-    D[f"pred_class"] = plurality_votes
-    D.drop("Fold", axis=1, inplace=True)
+    D["pred_class"] = plurality_votes
     D.to_csv(f".\\results_RF\\{name[:-4]}-results.out.csv", index=False)
 
     confusion = confusion_matrix(D, C, D[C].unique())

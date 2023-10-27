@@ -74,7 +74,6 @@ def selectSplittingAttribute(D, A, C, threshold, ratio=False):
                 G[a] = (gain_val, alpha)
             else:
                 G[a] = (gain(D[D[a] != "?"], C, a), None)
-    print(A)
     best = max(G, key=lambda k: G[k][0])
     return (best, G[best][1]) if G[best][0] > threshold else (None, None)
         
