@@ -8,7 +8,7 @@
         "edges": [
             {
                 "edge": {
-                    "alpha": "1.9",
+                    "alpha": 1.9,
                     "direction": "<=",
                     "leaf": {
                         "decision": "Iris-setosa",
@@ -18,7 +18,7 @@
             },
             {
                 "edge": {
-                    "alpha": "1.9",
+                    "alpha": 1.9,
                     "direction": ">",
                     "node": {
                         "var": "petalWidth",
@@ -28,21 +28,165 @@
                         "edges": [
                             {
                                 "edge": {
-                                    "alpha": "1.7",
+                                    "alpha": 1.7,
                                     "direction": "<=",
-                                    "leaf": {
-                                        "decision": "Iris-versicolor",
-                                        "p": 0.9074074074074074
+                                    "node": {
+                                        "var": "petalLength",
+                                        "type": 0,
+                                        "plurality": "Iris-versicolor",
+                                        "p": 0.9074074074074074,
+                                        "edges": [
+                                            {
+                                                "edge": {
+                                                    "alpha": 4.9,
+                                                    "direction": "<=",
+                                                    "node": {
+                                                        "var": "petalWidth",
+                                                        "type": 0,
+                                                        "plurality": "Iris-versicolor",
+                                                        "p": 0.9791666666666666,
+                                                        "edges": [
+                                                            {
+                                                                "edge": {
+                                                                    "alpha": 1.6,
+                                                                    "direction": "<=",
+                                                                    "leaf": {
+                                                                        "decision": "Iris-versicolor",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "edge": {
+                                                                    "alpha": 1.6,
+                                                                    "direction": ">",
+                                                                    "leaf": {
+                                                                        "decision": "Iris-virginica",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "edge": {
+                                                    "alpha": 4.9,
+                                                    "direction": ">",
+                                                    "node": {
+                                                        "var": "petalWidth",
+                                                        "type": 0,
+                                                        "plurality": "Iris-virginica",
+                                                        "p": 0.6666666666666666,
+                                                        "edges": [
+                                                            {
+                                                                "edge": {
+                                                                    "alpha": 1.5,
+                                                                    "direction": "<=",
+                                                                    "leaf": {
+                                                                        "decision": "Iris-virginica",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "edge": {
+                                                                    "alpha": 1.5,
+                                                                    "direction": ">",
+                                                                    "node": {
+                                                                        "var": "sepalLength",
+                                                                        "type": 0,
+                                                                        "plurality": "Iris-versicolor",
+                                                                        "p": 0.6666666666666666,
+                                                                        "edges": [
+                                                                            {
+                                                                                "edge": {
+                                                                                    "alpha": 6.7,
+                                                                                    "direction": "<=",
+                                                                                    "leaf": {
+                                                                                        "decision": "Iris-versicolor",
+                                                                                        "p": 1
+                                                                                    }
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "edge": {
+                                                                                    "alpha": 6.7,
+                                                                                    "direction": ">",
+                                                                                    "leaf": {
+                                                                                        "decision": "Iris-virginica",
+                                                                                        "p": 1
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            }
+                                        ]
                                     }
                                 }
                             },
                             {
                                 "edge": {
-                                    "alpha": "1.7",
+                                    "alpha": 1.7,
                                     "direction": ">",
-                                    "leaf": {
-                                        "decision": "Iris-virginica",
-                                        "p": 0.9782608695652174
+                                    "node": {
+                                        "var": "petalLength",
+                                        "type": 0,
+                                        "plurality": "Iris-virginica",
+                                        "p": 0.9782608695652174,
+                                        "edges": [
+                                            {
+                                                "edge": {
+                                                    "alpha": 4.8,
+                                                    "direction": "<=",
+                                                    "node": {
+                                                        "var": "sepalLength",
+                                                        "type": 0,
+                                                        "plurality": "Iris-virginica",
+                                                        "p": 0.6666666666666666,
+                                                        "edges": [
+                                                            {
+                                                                "edge": {
+                                                                    "alpha": 5.9,
+                                                                    "direction": "<=",
+                                                                    "leaf": {
+                                                                        "decision": "Iris-versicolor",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            },
+                                                            {
+                                                                "edge": {
+                                                                    "alpha": 5.9,
+                                                                    "direction": ">",
+                                                                    "leaf": {
+                                                                        "decision": "Iris-virginica",
+                                                                        "p": 1
+                                                                    }
+                                                                }
+                                                            }
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "edge": {
+                                                    "alpha": 4.8,
+                                                    "direction": ">",
+                                                    "leaf": {
+                                                        "decision": "Iris-virginica",
+                                                        "p": 1
+                                                    }
+                                                }
+                                            }
+                                        ]
                                     }
                                 }
                             }

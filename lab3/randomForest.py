@@ -78,7 +78,7 @@ def main(argv):
     vote_to_class = {number: value for number, value in enumerate(D[C].unique())}
 
     # CV
-    if n_folds > 0:
+    if n_folds > 1:
         # V-Fold creation
         D = D.sample(frac=1)
         fold_size = len(D) // n_folds
@@ -118,7 +118,10 @@ def main(argv):
             votes[i, row["pred_class"]] += 1
 
     plurality_votes = np.vectorize(vote_to_class.get)(np.argmax(votes, axis=1))
+    D.sort_index(inplace=True)
     D["pred_class"] = plurality_votes
+    print(D)
+
     D.to_csv(f".\\results_RF\\{name[:-4]}-results.out.csv", index=False)
 
     confusion = confusion_matrix(D, C, D[C].unique())

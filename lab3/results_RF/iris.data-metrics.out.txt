@@ -1,18 +1,18 @@
-Output for python3 .\randomForest.py .\data2\iris.data.csv 2 20 1 0 .3 0
+Output for python3 .\randomForest.py .\data2\iris.data.csv 4 120 5 5 .3 0
 
-NumAttributes: 2
-NumDataPoints: 20
-NumTrees: 1
+NumAttributes: 4
+NumDataPoints: 120
+NumTrees: 5
 
 Threshold: 0.3
 Using: Gain
-Folds: 0
+Folds: 5
 
 Confusion Matrix:
 pred_class       Iris-setosa  Iris-versicolor  Iris-virginica
 species                                                      
-Iris-setosa               37               13               0
+Iris-setosa               49                1               0
 Iris-versicolor            0               48               2
 Iris-virginica             0                6              44
 
-Accuracy: 0.86
+Accuracy: 0.94
