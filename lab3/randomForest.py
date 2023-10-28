@@ -80,13 +80,13 @@ def main(argv):
     # CV
     if n_folds > 1:
         # V-Fold creation
-        D = D.sample(frac=1)
-        fold_size = len(D) // n_folds
-        D["Fold"] = np.append(np.repeat(range(1, n_folds+1), fold_size), np.repeat(n_folds, len(D) % n_folds))
+        D_random = D.sample(frac=1).copy()
+        fold_size = len(D_random) // n_folds
+        D_random["Fold"] = np.append(np.repeat(range(1, n_folds+1), fold_size), np.repeat(n_folds, len(D_random) % n_folds))
 
         for fold in range(1, n_folds+1):
-            D_train = D[D["Fold"] != fold].copy()
-            D_test = D[D["Fold"] == fold].copy()
+            D_train = D_random[D_random["Fold"] != fold].copy()
+            D_test = D_random[D_random["Fold"] == fold].copy()
 
             forest = random_forest_classifier(D_train, A, C, threshold, gain, NumAttributes, NumDataPoints, NumTrees)
             for tree in forest:
@@ -94,7 +94,6 @@ def main(argv):
                 D_test["pred_class"] = D_test["pred_class"].map(class_to_vote)
                 for i, row in D_test.iterrows():
                     votes[i, row["pred_class"]] += 1
-        D.drop("Fold", axis=1, inplace=True)
 
     elif n_folds == -1: 
         # all-but-one CV
@@ -118,9 +117,7 @@ def main(argv):
             votes[i, row["pred_class"]] += 1
 
     plurality_votes = np.vectorize(vote_to_class.get)(np.argmax(votes, axis=1))
-    D.sort_index(inplace=True)
     D["pred_class"] = plurality_votes
-    print(D)
 
     D.to_csv(f".\\results_RF\\{name[:-4]}-results.out.csv", index=False)
 
