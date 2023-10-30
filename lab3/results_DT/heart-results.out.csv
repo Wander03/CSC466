@@ -1,0 +1,30 @@
+Output for python3 .\validation.py .\data2\heart.csv 10 .1 0
+
+Threshold: 0.1
+Using: Gain
+Folds: 10
+
+Overall Confusion Matrix:
+pred_class        0      1
+HeartDisease              
+0             292.0  118.0
+1              41.0  467.0
+
+Precision:
+pred_class
+0    0.876877
+1    0.798291
+dtype: float64
+
+Recall:
+HeartDisease
+0    0.712195
+1    0.919291
+dtype: float64
+
+
+Overall Accuracy: 0.8268
+Overall Error Rate: 0.1732
+
+Average Accuracy: 0.8258
+Average Error Rate: 0.1742

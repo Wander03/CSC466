@@ -1,0 +1,30 @@
+Output for python3 .\validation.py .\data2\crx.data.csv 10 .3 0
+
+Threshold: 0.3
+Using: Gain
+Folds: 10
+
+Overall Confusion Matrix:
+pred_class      +      -
+A16                     
++           276.0   31.0
+-            73.0  310.0
+
+Precision:
+pred_class
++    0.790831
+-    0.909091
+dtype: float64
+
+Recall:
+A16
++    0.899023
+-    0.809399
+dtype: float64
+
+
+Overall Accuracy: 0.8493
+Overall Error Rate: 0.1507
+
+Average Accuracy: 0.8423
+Average Error Rate: 0.1577

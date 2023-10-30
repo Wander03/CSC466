@@ -1,0 +1,41 @@
+Output for python3 .\validation.py .\data\nursery.csv 10 .1 0
+
+Threshold: 0.1
+Using: Gain
+Folds: 10
+
+Overall Confusion Matrix:
+pred_class  spec_prior  not_recom  ...  very_recom  recommend
+class                              ...                       
+spec_prior      3999.0        0.0  ...         0.0        0.0
+not_recom          0.0     4320.0  ...         0.0        0.0
+priority          92.0        0.0  ...        40.0        0.0
+very_recom         0.0        0.0  ...       271.0        0.0
+recommend          0.0        0.0  ...         2.0        0.0
+
+[5 rows x 5 columns]
+
+Precision:
+pred_class
+spec_prior    0.977512
+not_recom     1.000000
+priority      0.975921
+very_recom    0.865815
+recommend     0.000000
+dtype: float64
+
+Recall:
+class
+spec_prior    0.988872
+not_recom     1.000000
+priority      0.969058
+very_recom    0.826220
+recommend     0.000000
+dtype: float64
+
+
+Overall Accuracy: 0.9818
+Overall Error Rate: 0.0182
+
+Average Accuracy: 0.9815
+Average Error Rate: 0.0185
