@@ -1,0 +1,15 @@
+Output for python3 knn.py .\data\nursery.csv .\data\nursery.csv 3 1
+
+Num Neighbors: 3
+Distance Metric: Eucledian Distance
+
+Confusion Matrix:
+pred_class  recommend  priority  not_recom  very_recom  spec_prior
+class                                                             
+recommend           2         0          0           0           0
+priority            0      4266          0           0           0
+not_recom           0      1689        609           0        2022
+very_recom          0         0          0         328           0
+spec_prior          0         0          0           0        4044
+
+Accuracy: 0.7137

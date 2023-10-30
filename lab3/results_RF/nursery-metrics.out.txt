@@ -1,0 +1,20 @@
+Output for python3 .\randomForest.py .\data\nursery.csv 7 200 11 10 .1 0
+
+NumAttributes: 7
+NumDataPoints: 200
+NumTrees: 11
+
+Threshold: 0.1
+Using: Gain
+Folds: 10
+
+Confusion Matrix:
+pred_class  recommend  priority  not_recom  very_recom  spec_prior
+class                                                             
+recommend           0         2          0           0           0
+priority            0      3695          0          12         559
+not_recom           0         0       4320           0           0
+very_recom          0       318          0          10           0
+spec_prior          0       576          0           0        3468
+
+Accuracy: 0.8868

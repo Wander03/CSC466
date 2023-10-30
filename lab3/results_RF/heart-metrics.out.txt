@@ -1,17 +1,17 @@
-Output for python3 .\randomForest.py .\data2\heart.csv 3 20 5 10 .3 0
+Output for python3 .\randomForest.py .\data2\heart.csv 7 200 7 10 .1 0
 
-NumAttributes: 3
-NumDataPoints: 20
-NumTrees: 5
+NumAttributes: 7
+NumDataPoints: 200
+NumTrees: 7
 
-Threshold: 0.3
+Threshold: 0.1
 Using: Gain
 Folds: 10
 
 Confusion Matrix:
 pred_class      0    1
 HeartDisease          
-0             118  292
-1             156  352
+0             312   98
+1              47  461
 
-Accuracy: 0.512
+Accuracy: 0.842

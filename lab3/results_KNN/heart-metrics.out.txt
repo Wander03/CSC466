@@ -1,0 +1,12 @@
+Output for python3 .\knn.py .\data2\heart.csv .\data2\heart.csv 4 1
+
+Num Neighbors: 4
+Distance Metric: Eucledian Distance
+
+Confusion Matrix:
+pred_class      0    1
+HeartDisease          
+0             365   45
+1              37  471
+
+Accuracy: 0.9107

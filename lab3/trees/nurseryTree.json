@@ -1,38 +1,7 @@
 {
     "dataset": "nursery.csv",
-    "node": {
-        "var": "health",
-        "type": 1,
-        "plurality": "not_recom",
-        "p": 0.3333333333333333,
-        "edges": [
-            {
-                "edge": {
-                    "value": "recommended",
-                    "leaf": {
-                        "decision": "priority",
-                        "p": 0.5583333333333333
-                    }
-                }
-            },
-            {
-                "edge": {
-                    "value": "priority",
-                    "leaf": {
-                        "decision": "spec_prior",
-                        "p": 0.5708333333333333
-                    }
-                }
-            },
-            {
-                "edge": {
-                    "value": "not_recom",
-                    "leaf": {
-                        "decision": "not_recom",
-                        "p": 1
-                    }
-                }
-            }
-        ]
+    "leaf": {
+        "decision": "not_recom",
+        "p": 0.3333333333333333
     }
 }
