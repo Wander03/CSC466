@@ -1,31 +1,37 @@
-Output for python3 .\kmeans.py .\data\4clusters.csv 4 1 1 0 .05
+Output for python3 .\kmeans.py .\data\4clusters.csv 4 1 1 1 .1
 
 Initial Centroid: K-means++
 Distance Metric: Euclidean Distance
-Standardization: None
-Stoppage Threshold: 0.05
+Standardization: Min-Max Standardization
+Stoppage Threshold: 0.1
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 Cluster 0
-Center: 22.0,38.0,
-Max Dist. to Center: 3.0
-Min Dist. to Center: 3.0
-Avg Dist. to Center: 3.0
-SSE for Cluster: 18.0
+Center: 0.1904761904761905,0.8452380952380951,
+Max Dist. to Center: 0.2993452024507171
+Min Dist. to Center: 0.019305724421052523
+Avg Dist. to Center: 0.1332029124611435
+SSE for Cluster: 0.19077193665105746
 
-2 Points:
+8 Points:
+10,42,
+8,41,
+13,40,
+7,39,
+9,38,
+12,38,
 19,38,
 25,38,
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 Cluster 1
-Center: 33.166666666666664,17.27777777777778,
-Max Dist. to Center: 12.124101086698913
-Min Dist. to Center: 2.2838671990104937
-Avg Dist. to Center: 7.579450143514094
-SSE for Cluster: 1164.111111111111
+Center: 0.716346153846154,0.2048611111111111,
+Max Dist. to Center: 0.3436640709047646
+Min Dist. to Center: 0.08781058559005572
+Avg Dist. to Center: 0.2056857956819941
+SSE for Cluster: 0.8542061885912048
 
 18 Points:
 32,27,
@@ -50,11 +56,11 @@ SSE for Cluster: 1164.111111111111
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 Cluster 2
-Center: 41.111111111111114,41.77777777777778,
-Max Dist. to Center: 4.275973645531965
-Min Dist. to Center: 0.7856742013183874
-Avg Dist. to Center: 2.9117006199139848
-SSE for Cluster: 86.44444444444443
+Center: 0.8769230769230768,0.8694444444444445,
+Max Dist. to Center: 0.13215721278769066
+Min Dist. to Center: 0.028264150883128964
+Avg Dist. to Center: 0.08902598518500386
+SSE for Cluster: 0.08119808788078021
 
 9 Points:
 41,45,
@@ -70,19 +76,13 @@ SSE for Cluster: 86.44444444444443
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 Cluster 3
-Center: 9.9,37.8,
-Max Dist. to Center: 4.3416586692184795
-Min Dist. to Center: 0.9219544457292896
-Avg Dist. to Center: 3.4299301473944324
-SSE for Cluster: 128.5
+Center: 0.14957264957264957,0.6759259259259259,
+Max Dist. to Center: 0.1809579432515583
+Min Dist. to Center: 0.019005219464567402
+Avg Dist. to Center: 0.08251397596950677
+SSE for Cluster: 0.04176609767777858
 
-10 Points:
-10,42,
-8,41,
-13,40,
-7,39,
-9,38,
-12,38,
+4 Points:
 6,37,
 13,35,
 9,34,
