@@ -11,36 +11,76 @@ Description:
     How to run: python3 kmeans.py 
                     <input file: consits of data to build classifier> 
                     <K: number of neighbors to consider> 
+                    <initial centroid selection: 0 - random, 1 - Kmeans++>
                     <distance metric: 1 - eucledian, 2 - manhattan, 3 - cosine sim>
                     <min-max standardization: 1 - preform, 0 - do not preform>
+                    <stoppage threshold: min (or max for cosine sim) movement of centroids before stopping>
 """
 import pandas as pd
 import numpy as np
 from sys import argv
+from cluster import Cluster
 
 
-def eucledian_dist(d1, d2):
+def eucledian_dist(d1, d2, df=False):
     """
-    d1: row to predict
-    d2: data to predict on
+    d1: point 1
+    d2: point 2
+    df: if points are Data Frames
     """
-    return d2.apply(lambda row: np.sqrt(np.sum((d1.to_numpy() - row.to_numpy()) ** 2)), axis=1)
+    if df:
+        return d2.apply(lambda row: np.sqrt(np.sum((d1.to_numpy() - row.to_numpy()) ** 2)), axis=1)
+    return np.sqrt(np.sum((d1 - d2) ** 2))
 
-def manhattan_dist(d1, d2):
+def manhattan_dist(d1, d2, df=False):
     """
-    d1: row to predict
-    d2: data to predict on
+    d1: point 1
+    d2: point 2
+    df: if points are Data Frames
     """
-    return d2.apply(lambda row: np.sum(abs(d1.to_numpy() - row.to_numpy())), axis=1)
+    if df:
+        return d2.apply(lambda row: np.sum(abs(d1.to_numpy() - row.to_numpy())), axis=1)
+    return np.sum(abs(d1 - d2))
 
-def cosine_sim(d1, d2):
+def cosine_sim(d1, d2, df=False):
     """
-    d1: row to predict
-    d2: data to predict on
+    d1: point 1
+    d2: point 2
+    df: if points are Data Frames
     """
-    return d2.apply(lambda row: np.dot(d1.to_numpy(), row.to_numpy()) / (np.linalg.norm(d1.to_numpy()) * np.linalg.norm(row.to_numpy())), axis=1)
+    if df:
+        return d2.apply(lambda row: np.dot(d1.to_numpy(), row.to_numpy()) / (np.linalg.norm(d1.to_numpy()) * np.linalg.norm(row.to_numpy())), axis=1)
+    return np.dot(d1, d2) / (np.linalg.norm(d1) * np.linalg.norm(d2))
 
-def k_means(D, k, dist, stand):
+def k_means_plusplus(D, k, dist):
+    if dist == 1:
+        distances = D.apply(eucledian_dist, args=(D, True), axis=1)
+    elif dist == 2:
+        distances = D.apply(manhattan_dist, args=(D, True), axis=1)
+    else:
+        distances = D.apply(cosine_sim, args=(D, True), axis=1)
+
+    centroids = [0] * k
+    if dist != 3:
+        centroids[0], centroids[1] = np.unravel_index(np.argmax(distances), distances.shape)
+        distances.loc[centroids[:2], centroids[:2]] = 0
+
+        for i in range(2, k):
+            # Iterate through all points x in D and find the point x s.t. the sum of distances from x to the previously selected centroids (m1, m2, ..., m_i-1) is maximum
+            centroids[i] = np.argmax(distances[centroids[:i]].apply(lambda row: np.sum(row), axis=1))
+            # So this points cannot be selected as a centroids again
+            distances.loc[centroids[i], centroids[:i]] = 0
+    else:
+        centroids[0], centroids[1] = np.unravel_index(np.argmin(distances), distances.shape)
+        distances.loc[centroids[:2], centroids[:2]] = np.Infinity
+        for i in range(2, k):
+            # Iterate through all points x in D and find the point x s.t. the sum of distances from x to the previously selected centroids (m1, m2, ..., m_i-1) is minimum
+            centroids[i] = np.argmin(distances[centroids[:i]].apply(lambda row: np.sum(row), axis=1))
+            distances.loc[centroids[i], centroids[:i]] = np.Infinity
+
+    return centroids
+    
+def k_means(D, k, initial, dist, stand, epsilon):
     if stand:
         # Min-max standardization
         for col, val in D.items():
@@ -48,60 +88,119 @@ def k_means(D, k, dist, stand):
             max_val = val.max()
             D[col] = (val - min_val) / (max_val - min_val)
 
-    if dist == 1:
-        distances = D.apply(eucledian_dist, args=(D,), axis=1)
-    elif dist == 2:
-        distances = D.apply(manhattan_dist, args=(D,), axis=1)
+    cl = [None] * D.shape[0]
+    if initial == 0:
+        m = D.sample(k, replace=False).values
     else:
-        distances = D.apply(cosine_sim, args=(D,), axis=1)
+        m = [D.iloc[i].to_list() for i in k_means_plusplus(D, k, dist)]
 
-    # if dist != 3:
-    #     closest_neighbors = distances.T.apply(lambda row: row.nsmallest(k).index.tolist(), axis=1)
-    # else:
-    #     closest_neighbors = distances.T.apply(lambda row: row.nlargest(k).index.tolist(), axis=1)
-    
-    # predictions = {}
-    # for i, row in enumerate(closest_neighbors):
-    #     predictions[D.iloc[i]["index"]] = D.iloc[row][C].value_counts().index.tolist()[0]
+    flag = True
+    while flag:
+        m_old = m.copy()
+        cl = [Cluster(i, D.shape[1]) for i in m]
 
-    return predictions
+        for index, x in D.iterrows():
+            if dist == 1:
+                cluster = np.argmin([eucledian_dist(c.get_centroid(), np.array(x)) for c in cl])
+            elif dist == 2:
+                cluster = np.argmin([manhattan_dist(c.get_centroid(), np.array(x)) for c in cl])
+            else:
+                cluster = np.argmax([cosine_sim(c.get_centroid(), np.array(x)) for c in cl])
+
+            cl[cluster].add(index, x.to_list())
+        
+        for j in range(k):
+            m[j] = cl[j].mean()
+
+        # Outliers - If >= 2 SD away from centroid, don't affect next centroid calc
+        # for j in cl:
+        #     points = j.get_points().copy()
+        #     if dist == 1:
+        #         dists = [eucledian_dist(D.iloc[x], j.get_centroid()) for x in points]
+        #     elif dist == 2:
+        #         dists = [manhattan_dist(D.iloc[x], j.get_centroid()) for x in points]
+        #     else:
+        #         dists = [cosine_sim(D.iloc[x], j.get_centroid()) for x in points]
+
+        # std = np.std(dists)
+
+        # for i, x in enumerate(dists):
+        #     if x >= 2*std:
+        #         j.remove(points[i], D.iloc[points[i]])
+
+        # Stoppage Conditions
+        if np.array_equal(np.sort(m), np.sort(m_old)):
+            flag = False
+        
+        if dist == 1:
+            if np.max([eucledian_dist(m[j], m_old[j]) for j in range(k)]) <= epsilon:
+                flag = False
+        elif dist == 2:
+            if np.max([manhattan_dist(m[j], m_old[j]) for j in range(k)]) <= epsilon:
+                flag = False
+        else:
+            if np.min([cosine_sim(m[j], m_old[j]) for j in range(k)]) >= epsilon:
+                flag = False
+
+    return cl
 
 def main(argv):
     D = pd.read_csv(argv[1], skiprows=[0], header=None, dtype=str)
     restriction = pd.read_csv(argv[1], nrows=1, header=None).iloc[0].to_list()
     K = int(argv[2])
-    distance = int(argv[3])
-    standardize = bool(argv[4])
+    initial_cluster = int(argv[3])
+    distance = int(argv[4])
+    standardize = bool(int(argv[5]))
+    epsilon = float(argv[6])
     name = argv[1].split("/")[-1] if "/" in argv[1] else argv[1].split("\\")[-1]
+    D_filtered =  D.loc[:, map(bool, restriction)].copy()
+    D_filtered.columns = range(D_filtered.shape[1])
+    D_filtered = D_filtered.astype(float)
 
-    D =  D.loc[:, map(bool, restriction)]
-    D.columns = range(D.shape[1])
-    D = D.astype(float)
+    clusters = k_means(D_filtered, K, initial_cluster, distance, standardize, epsilon)
 
-    k_means(D, K, distance, standardize)
+    with open(f".\\results_kmeans\\{name[:-4]}.out.txt", "w") as f:
+        f.write(f"Output for python3 {' '.join(argv)}\n\n")
+        f.write(f'Initial Centroid: {"Random" if distance == 0 else "K-means++"}\n')
 
-    # predictions = knn_classifier_same(D_clean, A, C, K, dist) if flag else knn_classifier_different(D_clean, A, C, classify.copy(), K, dist)
-    # D["pred_class"] = D.index.map(predictions)
-    
-    # D.to_csv(f".\\results_KNN\\{name[:-4]}-results.out.csv", index=False)
+        if distance == 1:
+            f.write(f'Distance Metric: Euclidean Distance\n')
+        elif distance == 2:
+            f.write(f'Distance Metric: Manhattan Distance\n')
+        else:
+            f.write(f'Distance Metric: Cosine Simularity\n')
 
-    # confusion = confusion_matrix(D, C, D[C].unique())
-    # accuracy = np.sum(np.diag(confusion)) / np.sum(confusion.to_numpy())
+        f.write(f'Standardization: {"Min-Max Standardization" if standardize else "None"}\n')
+        f.write(f'Stoppage Threshold: {epsilon}\n\n')
 
-    # if flag:
-    #     with open(f".\\results_KNN\\{name[:-4]}-metrics.out.txt", "w") as f:
-    #         f.write(f"Output for python3 {' '.join(argv)}\n\n")
-    #         f.write(f"Num Neighbors: {K}\n")
+        f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
+        for j in range(len(clusters)):
+            centroid = clusters[j].get_centroid()
 
-    #         if dist == 1:
-    #             f.write("Distance Metric: Eucledian Distance\n\n")
-    #         elif dist == 2:
-    #             f.write("Distance Metric: Manhattan Distance\n\n")
-    #         else:
-    #             f.write("Distance Metric: Cosine Similarity\n\n")
+            if distance == 1:
+                dists = [eucledian_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+            elif distance == 2:
+                dists = [manhattan_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+            else:
+                dists = [cosine_sim(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
 
-    #         f.write(f"Confusion Matrix:\n{confusion}\n\n")
-    #         f.write(f"Accuracy: {round(accuracy, 4)}\n")
+            f.write(f'Cluster {j}\nCenter: ')
+            for i in clusters[j].get_centroid():
+                f.write(f'{i},')
+            f.write('\n')
+            f.write(f'Max Dist. to Center: {np.max(dists)}\n')
+            f.write(f'Min Dist. to Center: {np.min(dists)}\n')
+            f.write(f'Avg Dist. to Center: {np.mean(dists)}\n')
+            f.write(f'SSE for Cluster: {np.sum(np.array(dists)**2)}\n\n')
+            f.write(f'{clusters[j].get_num()} Points:\n')
+
+            for x in clusters[j].get_points():
+                for i in D.iloc[x].to_list():
+                    f.write(f'{i},')
+                f.write('\n')
+
+            f.write('\n')
+            f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
 
 if __name__ == "__main__":
     main(argv)
