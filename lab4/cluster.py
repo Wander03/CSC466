@@ -4,7 +4,7 @@ Quarter: Fall 2023
 Assigment: Lab 4
 
 Name(s):
-    Sophia Chung // [ADD CALPOLY EMAIL]
+    Sophia Chung // spchung@calpoly.edu
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:

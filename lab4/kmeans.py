@@ -4,7 +4,7 @@ Quarter: Fall 2023
 Assigment: Lab 4
 
 Name(s):
-    Sophia Chung // [ADD CALPOLY EMAIL]
+    Sophia Chung // spchung@calpoly.edu
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
@@ -22,7 +22,7 @@ from sys import argv
 from cluster import Cluster
 
 
-def eucledian_dist(d1, d2, df=False):
+def euclidean_dist(d1, d2, df=False):
     """
     d1: point 1
     d2: point 2
@@ -54,7 +54,7 @@ def cosine_sim(d1, d2, df=False):
 
 def k_means_plusplus(D, k, dist):
     if dist == 1:
-        distances = D.apply(eucledian_dist, args=(D, True), axis=1)
+        distances = D.apply(euclidean_dist, args=(D, True), axis=1)
     elif dist == 2:
         distances = D.apply(manhattan_dist, args=(D, True), axis=1)
     else:
@@ -101,7 +101,7 @@ def k_means(D, k, initial, dist, stand, epsilon):
 
         for index, x in D.iterrows():
             if dist == 1:
-                cluster = np.argmin([eucledian_dist(c.get_centroid(), np.array(x)) for c in cl])
+                cluster = np.argmin([euclidean_dist(c.get_centroid(), np.array(x)) for c in cl])
             elif dist == 2:
                 cluster = np.argmin([manhattan_dist(c.get_centroid(), np.array(x)) for c in cl])
             else:
@@ -133,7 +133,7 @@ def k_means(D, k, initial, dist, stand, epsilon):
             flag = False
         
         if dist == 1:
-            if np.max([eucledian_dist(m[j], m_old[j]) for j in range(k)]) <= epsilon:
+            if np.max([euclidean_dist(m[j], m_old[j]) for j in range(k)]) <= epsilon:
                 flag = False
         elif dist == 2:
             if np.max([manhattan_dist(m[j], m_old[j]) for j in range(k)]) <= epsilon:
@@ -178,7 +178,7 @@ def main(argv):
             centroid = clusters[j].get_centroid()
 
             if distance == 1:
-                dists = [eucledian_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+                dists = [euclidean_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
             elif distance == 2:
                 dists = [manhattan_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
             else:
