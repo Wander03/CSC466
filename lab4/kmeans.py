@@ -9,7 +9,7 @@ Name(s):
 
 Description:
     How to run: python3 kmeans.py 
-                    <input file: consits of data to build classifier> 
+                    <input file: consists of data to build classifier> 
                     <K: number of neighbors to consider> 
                     <initial centroid selection: 0 - random, 1 - Kmeans++>
                     <distance metric: 1 - eucledian, 2 - manhattan, 3 - cosine sim>
