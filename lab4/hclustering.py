@@ -16,12 +16,61 @@ Description:
 """
 import pandas as pd
 import numpy as np
+import json
 from sys import argv
+from cluster2 import Cluster
 from kmeans import euclidean_dist, manhattan_dist, cosine_sim
 
 
-def single_link(dm, points):
-    return np.unravel_index(np.argmin(dm[points].iloc[points]), dm[points].iloc[points].shape)
+def single_link(dm, dist):
+    if dist == 3:
+        return np.unravel_index(np.argmax(dm), dm.shape)
+    return np.unravel_index(np.argmin(dm), dm.shape)
+
+def merge_clusters(clusters, dm, dist):
+    if len(clusters) == 1:
+        return clusters
+    
+    merge1, merge2 = single_link(dm, dist)
+
+    merge1_cluster = dm.columns[int(merge1)]
+    merge2_cluster = dm.columns[int(merge2)]
+
+    new_cluster = merge1_cluster + ',' + merge2_cluster
+
+    dm[merge1_cluster] = dm[[merge1_cluster, merge2_cluster]].apply(lambda row: min(row[merge1_cluster], row[merge2_cluster]), axis=1)
+    dm.loc[merge1_cluster] = dm[merge1_cluster]
+    dm.rename(index={merge1_cluster: new_cluster}, columns={merge1_cluster: new_cluster}, inplace=True)
+    dm.drop(merge2_cluster, axis=0, inplace=True)
+    dm.drop(merge2_cluster, axis=1, inplace=True)
+
+    height = dm[new_cluster].loc[new_cluster]
+
+    if dist == 3:
+        dm[new_cluster].loc[new_cluster] = -np.inf
+    else:
+        dm[new_cluster].loc[new_cluster] = np.inf
+
+    C1 = clusters.index(Cluster(merge1_cluster))
+    C2 = clusters.index(Cluster(merge2_cluster))
+
+    clusters.append(Cluster(new_cluster, height, [clusters[C1], clusters[C2]]))
+    clusters.remove(Cluster(merge1_cluster))
+    clusters.remove(Cluster(merge2_cluster))
+    
+    return merge_clusters(clusters, dm, dist)
+
+    # if len1 == 1 and len2 == 1:
+    #     return merge_clusters(clusters, dm, dist, dendro{'type': 'node', 'height': height, 'nodes': [D.iloc[int(merge1_cluster)],  {'type': 'leaf', 'height': 0, 'data': D.iloc[int(merge2_cluster)]}]})
+    # elif len1 == 1:
+    #     return merge_clusters(clusters, dm, dist, {'type': 'node', 'height': height, 'nodes': [dendro,  {'type': 'leaf', 'height': 0, 'data': D[merge1_cluster]}]})
+    # elif len2 == 1:
+    #     return merge_clusters(clusters, dm, dist, {'type': 'node', 'height': height, 'nodes': [dendro,  {'type': 'leaf', 'height': 0, 'data': D[merge2_cluster]}]})
+    # elif len(clusters) > 2:
+    #     return merge_clusters(clusters, dm, dist, {'type': 'node', 'height': height, 'nodes': [dendro]})
+    # else:
+    #     return {'type': 'root', 'height': height, 'nodes': [dendro]}
+
 
 def h_clustering(D, threshold, dist, stand):
     if stand:
@@ -30,7 +79,7 @@ def h_clustering(D, threshold, dist, stand):
             min_val = val.min()
             max_val = val.max()
             D[col] = (val - min_val) / (max_val - min_val)
-    
+
     # Compute distance matrix
     if dist == 1:
         dist_matrix = D.apply(euclidean_dist, args=(D,True), axis=1)
@@ -42,8 +91,17 @@ def h_clustering(D, threshold, dist, stand):
         dist_matrix = D.apply(cosine_sim, args=(D,True), axis=1)
         np.fill_diagonal(dist_matrix.values, -np.inf)
 
-    print(dist_matrix)
-    print(single_link(dist_matrix, [0, 1, 2, 3, 4, 5]))
+    # Create dendrogram
+    lst_names = [str(c) for c in dist_matrix.columns]
+    dist_matrix.columns = [str(col) for col in lst_names]
+    dist_matrix.index = [str(col) for col in lst_names]
+
+    cluster_lst = [Cluster(name, 0, None, D.iloc[int(name)].values.tolist()) for name in lst_names]
+
+    dendrogram = merge_clusters(cluster_lst, dist_matrix, dist)
+    print(dendrogram[0])
+    # print(json.dumps(dendrogram, indent=4))
+
 
 
 def main(argv):
