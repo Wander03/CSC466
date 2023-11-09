@@ -29,7 +29,7 @@ def single_link(dm, dist):
 
 def merge_clusters(clusters, dm, dist):
     if len(clusters) == 1:
-        return clusters
+        return clusters[0]
     
     merge1, merge2 = single_link(dm, dist)
 
@@ -60,105 +60,121 @@ def merge_clusters(clusters, dm, dist):
     
     return merge_clusters(clusters, dm, dist)
 
-    # if len1 == 1 and len2 == 1:
-    #     return merge_clusters(clusters, dm, dist, dendro{'type': 'node', 'height': height, 'nodes': [D.iloc[int(merge1_cluster)],  {'type': 'leaf', 'height': 0, 'data': D.iloc[int(merge2_cluster)]}]})
-    # elif len1 == 1:
-    #     return merge_clusters(clusters, dm, dist, {'type': 'node', 'height': height, 'nodes': [dendro,  {'type': 'leaf', 'height': 0, 'data': D[merge1_cluster]}]})
-    # elif len2 == 1:
-    #     return merge_clusters(clusters, dm, dist, {'type': 'node', 'height': height, 'nodes': [dendro,  {'type': 'leaf', 'height': 0, 'data': D[merge2_cluster]}]})
-    # elif len(clusters) > 2:
-    #     return merge_clusters(clusters, dm, dist, {'type': 'node', 'height': height, 'nodes': [dendro]})
-    # else:
-    #     return {'type': 'root', 'height': height, 'nodes': [dendro]}
-
-
-def h_clustering(D, threshold, dist, stand):
+def h_clustering(D, D_filtered, dist, stand):
     if stand:
+        print('te')
         # Min-max standardization
-        for col, val in D.items():
+        for col, val in D_filtered.items():
             min_val = val.min()
             max_val = val.max()
-            D[col] = (val - min_val) / (max_val - min_val)
+            D_filtered[col] = (val - min_val) / (max_val - min_val)
 
     # Compute distance matrix
     if dist == 1:
-        dist_matrix = D.apply(euclidean_dist, args=(D,True), axis=1)
+        dist_matrix = D_filtered.apply(euclidean_dist, args=(D_filtered,True), axis=1)
         np.fill_diagonal(dist_matrix.values, np.inf)
     elif dist == 2:
-        dist_matrix = D.apply(manhattan_dist, args=(D,True), axis=1)
+        dist_matrix = D_filtered.apply(manhattan_dist, args=(D_filtered,True), axis=1)
         np.fill_diagonal(dist_matrix.values, np.inf)
     else:
-        dist_matrix = D.apply(cosine_sim, args=(D,True), axis=1)
+        dist_matrix = D_filtered.apply(cosine_sim, args=(D_filtered,True), axis=1)
         np.fill_diagonal(dist_matrix.values, -np.inf)
 
-    # Create dendrogram
+    # Create clusters
     lst_names = [str(c) for c in dist_matrix.columns]
     dist_matrix.columns = [str(col) for col in lst_names]
     dist_matrix.index = [str(col) for col in lst_names]
 
     cluster_lst = [Cluster(name, 0, None, D.iloc[int(name)].values.tolist()) for name in lst_names]
 
-    dendrogram = merge_clusters(cluster_lst, dist_matrix, dist)
-    print(dendrogram[0])
-    # print(json.dumps(dendrogram, indent=4))
+    return merge_clusters(cluster_lst, dist_matrix, dist)  
 
+def create_dendrogram(node: Cluster):
+    children = node.get_children()
+    if children is None:
+        return {'type': 'leaf', 'height': 0, 'data': node.get_data()}
+    return {'type': 'node', 'height': node.get_height(), 'nodes': [create_dendrogram(children[0]), create_dendrogram(children[1])]}
 
+def cut_dendrogram(node: Cluster, threshold: float):
+    if node.get_height() > threshold:
+        trimmed_clusters = []
+        trimmed_clusters.extend(cut_dendrogram(node.get_children()[0], threshold))
+        trimmed_clusters.extend(cut_dendrogram(node.get_children()[1], threshold))
+    else:
+        trimmed_clusters = [node]
+    return trimmed_clusters
 
 def main(argv):
     D = pd.read_csv(argv[1], skiprows=[0], header=None, dtype=str)
     restriction = pd.read_csv(argv[1], nrows=1, header=None).iloc[0].to_list()
-    threshold = int(argv[2])
-    distance = int(argv[3])
-    standardize = bool(int(argv[4]))
+
+    # if threshold is included...
+    flag = False
+    if len(argv) == 5:
+        flag = True
+        threshold = int(argv[2])
+        distance = int(argv[3])
+        standardize = bool(int(argv[4]))
+    else:
+        distance = int(argv[2])
+        standardize = bool(int(argv[3]))
+
     name = argv[1].split("/")[-1] if "/" in argv[1] else argv[1].split("\\")[-1]
     D_filtered =  D.loc[:, map(bool, restriction)].copy()
     D_filtered.columns = range(D_filtered.shape[1])
     D_filtered = D_filtered.astype(float)
 
-    clusters = h_clustering(D_filtered, threshold, distance, standardize)
-    return
-    with open(f".\\results_kmeans\\{name[:-4]}.out.txt", "w") as f:
-        f.write(f"Output for python3 {' '.join(argv)}\n\n")
-        f.write(f'Initial Centroid: {"Random" if distance == 0 else "K-means++"}\n')
+    root = h_clustering(D, D_filtered, distance, standardize)
+    dendrogram = {'type': 'root', 'height': root.get_height(), 'nodes':[create_dendrogram(root.get_children()[0]), create_dendrogram(root.get_children()[1])]}
 
-        if distance == 1:
-            f.write(f'Distance Metric: Euclidean Distance\n')
-        elif distance == 2:
-            f.write(f'Distance Metric: Manhattan Distance\n')
-        else:
-            f.write(f'Distance Metric: Cosine Simularity\n')
+    with open(f".\\dendrograms\\{name[:-4]}Dendro.json", "w") as f:
+        f.write(json.dumps(dendrogram, indent=4))
 
-        f.write(f'Standardization: {"Min-Max Standardization" if standardize else "None"}\n')
-        f.write(f'Stoppage Threshold: {epsilon}\n\n')
-
-        f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
-        for j in range(len(clusters)):
-            centroid = clusters[j].get_centroid()
+    if flag:
+        clusters = cut_dendrogram(root, threshold)
+        with open(f".\\results_kmeans\\{name[:-4]}.out.txt", "w") as f:
+            f.write(f"Output for python3 {' '.join(argv)}\n\n")
 
             if distance == 1:
-                dists = [euclidean_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+                f.write(f'Distance Metric: Euclidean Distance\n')
             elif distance == 2:
-                dists = [manhattan_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+                f.write(f'Distance Metric: Manhattan Distance\n')
             else:
-                dists = [cosine_sim(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+                f.write(f'Distance Metric: Cosine Simularity\n')
 
-            f.write(f'Cluster {j}\nCenter: ')
-            for i in clusters[j].get_centroid():
-                f.write(f'{i},')
-            f.write('\n')
-            f.write(f'Max Dist. to Center: {np.max(dists)}\n')
-            f.write(f'Min Dist. to Center: {np.min(dists)}\n')
-            f.write(f'Avg Dist. to Center: {np.mean(dists)}\n')
-            f.write(f'SSE for Cluster: {np.sum(np.array(dists)**2)}\n\n')
-            f.write(f'{clusters[j].get_num()} Points:\n')
+            f.write(f'Standardization: {"Min-Max Standardization" if standardize else "None"}\n')
+            f.write(f'Threshold: {threshold}\n')
 
-            for x in clusters[j].get_points():
-                for i in D.iloc[x].to_list():
+            f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
+            for j in range(len(clusters)):
+                print(clusters[j])
+                centroid = D_filtered.iloc[clusters[j].get_points().split(',')].values.mean()
+                print(centroid)
+                return
+                if distance == 1:
+                    dists = [euclidean_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+                elif distance == 2:
+                    dists = [manhattan_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+                else:
+                    dists = [cosine_sim(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+
+                f.write(f'Cluster {j}\nCenter: ')
+                for i in clusters[j].get_centroid():
                     f.write(f'{i},')
                 f.write('\n')
+                f.write(f'Max Dist. to Center: {np.max(dists)}\n')
+                f.write(f'Min Dist. to Center: {np.min(dists)}\n')
+                f.write(f'Avg Dist. to Center: {np.mean(dists)}\n')
+                f.write(f'SSE for Cluster: {np.sum(np.array(dists)**2)}\n\n')
+                f.write(f'{clusters[j].get_num()} Points:\n')
 
-            f.write('\n')
-            f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
+                for x in clusters[j].get_points():
+                    for i in D.iloc[x].to_list():
+                        f.write(f'{i},')
+                    f.write('\n')
+
+                f.write('\n')
+                f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
 
 if __name__ == "__main__":
     main(argv)
