@@ -1,7 +1,0 @@
-Output for python3 .\hclustering.py .\data\mammal_milk.csv 5 1 0
-
-Distance Metric: Euclidean Distance
-Standardization: None
-Threshold: 5
--+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
-

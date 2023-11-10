@@ -112,7 +112,7 @@ def main(argv):
     flag = False
     if len(argv) == 5:
         flag = True
-        threshold = int(argv[2])
+        threshold = float(argv[2])
         distance = int(argv[3])
         standardize = bool(int(argv[4]))
     else:
@@ -127,12 +127,12 @@ def main(argv):
     root = h_clustering(D, D_filtered, distance, standardize)
     dendrogram = {'type': 'root', 'height': root.get_height(), 'nodes':[create_dendrogram(root.get_children()[0]), create_dendrogram(root.get_children()[1])]}
 
-    with open(f".\\dendrograms\\{name[:-4]}Dendro.json", "w") as f:
+    with open(f".\\dendrograms\\{name[:-4]}Dendrogram.json", "w") as f:
         f.write(json.dumps(dendrogram, indent=4))
 
-    if not flag:
+    if flag:
         clusters = cut_dendrogram(root, threshold)
-        with open(f".\\results_kmeans\\{name[:-4]}.out.txt", "w") as f:
+        with open(f".\\results_hclustering\\{name[:-4]}.out.txt", "w") as f:
             f.write(f"Output for python3 {' '.join(argv)}\n\n")
 
             if distance == 1:
@@ -143,32 +143,31 @@ def main(argv):
                 f.write(f'Distance Metric: Cosine Simularity\n')
 
             f.write(f'Standardization: {"Min-Max Standardization" if standardize else "None"}\n')
-            f.write(f'Threshold: {threshold}\n')
+            f.write(f'Threshold: {threshold}\n\n')
 
             f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
             for j in range(len(clusters)):
-                print(clusters[j])
-                centroid = D_filtered.iloc[clusters[j].get_points().split(',')].values.mean()
-                print(centroid)
-                return
+                points = list(map(int, clusters[j].get_points().split(',')))
+                center = D_filtered.iloc[points].mean(axis=0).to_list()
+
                 if distance == 1:
-                    dists = [euclidean_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+                    dists = [euclidean_dist(D_filtered.iloc[x], center) for x in points]
                 elif distance == 2:
-                    dists = [manhattan_dist(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+                    dists = [manhattan_dist(D_filtered.iloc[x], center) for x in points]
                 else:
-                    dists = [cosine_sim(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
+                    dists = [cosine_sim(D_filtered.iloc[x], center) for x in points]
 
                 f.write(f'Cluster {j}\nCenter: ')
-                for i in clusters[j].get_centroid():
+                for i in center:
                     f.write(f'{i},')
                 f.write('\n')
                 f.write(f'Max Dist. to Center: {np.max(dists)}\n')
                 f.write(f'Min Dist. to Center: {np.min(dists)}\n')
                 f.write(f'Avg Dist. to Center: {np.mean(dists)}\n')
                 f.write(f'SSE for Cluster: {np.sum(np.array(dists)**2)}\n\n')
-                f.write(f'{clusters[j].get_num()} Points:\n')
+                f.write(f'{len(points)} Points:\n')
 
-                for x in clusters[j].get_points():
+                for x in points:
                     for i in D.iloc[x].to_list():
                         f.write(f'{i},')
                     f.write('\n')
