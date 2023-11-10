@@ -130,7 +130,7 @@ def main(argv):
     with open(f".\\dendrograms\\{name[:-4]}Dendro.json", "w") as f:
         f.write(json.dumps(dendrogram, indent=4))
 
-    if flag:
+    if not flag:
         clusters = cut_dendrogram(root, threshold)
         with open(f".\\results_kmeans\\{name[:-4]}.out.txt", "w") as f:
             f.write(f"Output for python3 {' '.join(argv)}\n\n")
