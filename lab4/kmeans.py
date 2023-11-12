@@ -169,7 +169,7 @@ def main(argv):
             else:
                 dists = [cosine_sim(D_filtered.iloc[x], centroid) for x  in clusters[j].get_points()]
 
-            f.write(f'Cluster {j}\nCenter: ')
+            f.write(f'Cluster {j}:\nCenter: ')
             for i in clusters[j].get_centroid():
                 f.write(f'{i},')
             f.write('\n')

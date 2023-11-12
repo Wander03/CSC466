@@ -157,7 +157,7 @@ def main(argv):
                 else:
                     dists = [cosine_sim(D_filtered.iloc[x], center) for x in points]
 
-                f.write(f'Cluster {j}\nCenter: ')
+                f.write(f'Cluster {j}:\nCenter: ')
                 for i in center:
                     f.write(f'{i},')
                 f.write('\n')
