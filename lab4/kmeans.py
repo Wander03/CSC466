@@ -112,22 +112,6 @@ def k_means(D, k, initial, dist, stand, epsilon):
         for j in range(k):
             m[j] = cl[j].mean()
 
-        # Outliers - If >= 2 SD away from centroid, don't affect next centroid calc
-        # for j in cl:
-        #     points = j.get_points().copy()
-        #     if dist == 1:
-        #         dists = [eucledian_dist(D.iloc[x], j.get_centroid()) for x in points]
-        #     elif dist == 2:
-        #         dists = [manhattan_dist(D.iloc[x], j.get_centroid()) for x in points]
-        #     else:
-        #         dists = [cosine_sim(D.iloc[x], j.get_centroid()) for x in points]
-
-        # std = np.std(dists)
-
-        # for i, x in enumerate(dists):
-        #     if x >= 2*std:
-        #         j.remove(points[i], D.iloc[points[i]])
-
         # Stoppage Conditions
         if np.array_equal(np.sort(m), np.sort(m_old)):
             flag = False
@@ -159,6 +143,7 @@ def main(argv):
 
     clusters = k_means(D_filtered, K, initial_cluster, distance, standardize, epsilon)
 
+    D['cluster'] = None
     with open(f".\\results_kmeans\\{name[:-4]}.out.txt", "w") as f:
         f.write(f"Output for python3 {' '.join(argv)}\n\n")
         f.write(f'Initial Centroid: {"Random" if distance == 0 else "K-means++"}\n')
@@ -195,12 +180,15 @@ def main(argv):
             f.write(f'{clusters[j].get_num()} Points:\n')
 
             for x in clusters[j].get_points():
-                for i in D.iloc[x].to_list():
+                D['cluster'].iloc[x] = j
+                for i in D.drop('cluster', axis=1).iloc[x].to_list():
                     f.write(f'{i},')
                 f.write('\n')
 
             f.write('\n')
             f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
+
+        D.to_csv(f".\\data_clustered\\kmeans\\{name[:-4]}_clustered.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)

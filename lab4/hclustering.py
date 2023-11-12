@@ -62,7 +62,6 @@ def merge_clusters(clusters, dm, dist):
 
 def h_clustering(D, D_filtered, dist, stand):
     if stand:
-        print('te')
         # Min-max standardization
         for col, val in D_filtered.items():
             min_val = val.min()
@@ -131,6 +130,7 @@ def main(argv):
         f.write(json.dumps(dendrogram, indent=4))
 
     if flag:
+        D['cluster'] = None
         clusters = cut_dendrogram(root, threshold)
         with open(f".\\results_hclustering\\{name[:-4]}.out.txt", "w") as f:
             f.write(f"Output for python3 {' '.join(argv)}\n\n")
@@ -168,12 +168,15 @@ def main(argv):
                 f.write(f'{len(points)} Points:\n')
 
                 for x in points:
-                    for i in D.iloc[x].to_list():
+                    D['cluster'].iloc[x] = j
+                    for i in D.drop('cluster', axis=1).iloc[x].to_list():
                         f.write(f'{i},')
                     f.write('\n')
 
                 f.write('\n')
                 f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
+    
+        D.to_csv(f".\\data_clustered\\hclustering\\{name[:-4]}_clustered.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)
