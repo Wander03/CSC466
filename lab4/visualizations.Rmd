@@ -5,6 +5,14 @@ date: "2023-11-06"
 output: html_document
 ---
 
+Course: CSC 466
+Quarter: Fall 2023
+Assigment: Lab 4
+
+Name(s):
+Sophia Chung // spchung@calpoly.edu
+Andrew Kerr // adkerr@calpoly.edu
+
 ```{r, message=F}
 library(here)
 library(tidyverse)
