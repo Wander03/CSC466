@@ -34,7 +34,6 @@ df_4clusters_scaled %>%
        color = 'Cluster')
 ```
 
-
 # Planets
 
 ```{r}
@@ -60,7 +59,6 @@ plot_ly(
 ) %>%
 layout(scene = list(title = '3D Cluster Visualization'))
 ```
-
 
 # Iris
 
@@ -90,3 +88,81 @@ plot_ly(
 layout(scene = list(title = '4D Cluster Visualization'))
 ```
 
+# 4clusters
+
+```{r}
+# k-Means
+df_4clusters <- read_csv(here('lab4', 'data_clustered', 'kmeans', '4clusters_clustered.csv'), skip=1, col_names=c('col1', 'col2', 'cluster'), show_col_types=FALSE)
+
+df_4clusters_scaled <- df_4clusters %>%
+  mutate(
+    col1_scaled = scale(col1),
+    col2_scaled = scale(col2),
+    cluster = as.factor(cluster)
+  )
+
+df_4clusters_scaled %>%
+  ggplot() +
+  geom_point(aes(x = col1_scaled, y = col2_scaled, color = cluster)) +
+  theme_bw() +
+  labs(title = '4clusters with Min-Max Scaling',
+       x = 'Feature 1 (scaled)',
+       y = 'Feature 2 (scaled)',
+       color = 'Cluster')
+```
+
+
+# Planets
+
+```{r}
+# k-Means
+df_planets <- read_csv(here('lab4', 'data_clustered', 'kmeans', 'planets_clustered.csv'), skip=1, col_names=c('col1', 'col2', 'col3', 'col4', 'cluster'), show_col_types=FALSE)
+
+df_planets_scaled <- df_planets %>%
+  mutate(
+    col2_scaled = scale(col2),
+    col3_scaled = scale(col3),
+    col4_scaled = scale(col4),
+    cluster = as.factor(cluster)
+  )
+
+plot_ly(
+  data = df_planets_scaled,
+  x = ~col2_scaled, 
+  y = ~col3_scaled, 
+  z = ~col4_scaled, 
+  color = ~cluster, 
+  type = 'scatter3d', 
+  mode = 'markers'
+) %>%
+layout(scene = list(title = '3D Cluster Visualization'))
+```
+
+
+# Iris
+
+```{r}
+# k-Means
+df_iris <- read_csv(here('lab4', 'data_clustered', 'kmeans', 'iris_clustered.csv'), skip=1, col_names=c('col1', 'col2', 'col3', 'col4', 'col5', 'cluster'), show_col_types=FALSE)
+
+df_iris_scaled <- df_iris %>%
+  mutate(
+    col1_scaled = scale(col1),
+    col2_scaled = scale(col2),
+    col3_scaled = scale(col3),
+    col4_scaled = scale(col4),
+    cluster = as.factor(cluster)
+  )
+
+plot_ly(
+  data = df_iris_scaled,
+  x = ~col1_scaled, 
+  y = ~col2_scaled, 
+  z = ~col3_scaled, 
+  color = ~cluster,
+  size = ~col4_scaled,  # Using size as the fourth dimension
+  type = 'scatter3d', 
+  mode = 'markers'
+) %>%
+layout(scene = list(title = '4D Cluster Visualization'))
+```
