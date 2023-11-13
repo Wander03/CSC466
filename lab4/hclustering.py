@@ -127,14 +127,14 @@ def main(argv):
     dendrogram = {'type': 'root', 'height': root.get_height(), 'nodes':[create_dendrogram(root.get_children()[0]), create_dendrogram(root.get_children()[1])]}
 
     # with open(f".\\dendrograms\\{name[:-4]}Dendrogram.json", "w") as f:
-    with open(f"/dendrograms/{name[:-4]}Dendrogram.json", "w") as f:
+    with open(f"./dendrograms/{name[:-4]}Dendrogram.json", "w") as f:
         f.write(json.dumps(dendrogram, indent=4))
 
     if flag:
         D['cluster'] = None
         clusters = cut_dendrogram(root, threshold)
         # with open(f".\\results_hclustering\\{name[:-4]}.out.txt", "w") as f:
-        with open(f"/results_hclustering/{name[:-4]}.out.txt", "w") as f:
+        with open(f"./results_hclustering/{name[:-4]}.out.txt", "w") as f:
             f.write(f"Output for python3 {' '.join(argv)}\n\n")
 
             if distance == 1:
@@ -179,7 +179,7 @@ def main(argv):
                 f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
     
         # D.to_csv(f".\\data_clustered\\hclustering\\{name[:-4]}_clustered.csv", index=False)
-        D.to_csv(f"/data_clustered/hclustering/{name[:-4]}_clustered.csv", index=False)
+        D.to_csv(f"./data_clustered/hclustering/{name[:-4]}_clustered.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)

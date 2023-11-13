@@ -15,7 +15,7 @@ library(plotly)
 
 ```{r}
 # DBSCAN
-df_4clusters <- read_csv(here('data_clustered', 'hclustering', '4clusters_clustered.csv'), skip=1, col_names=c('col1', 'col2', 'cluster'), show_col_types=FALSE)
+df_4clusters <- read_csv(here('lab4', 'data_clustered', 'dbscan', '4clusters_clustered.csv'), skip=1, col_names=c('col1', 'col2', 'cluster'), show_col_types=FALSE)
 
 df_4clusters_scaled <- df_4clusters %>%
   mutate(
@@ -39,7 +39,7 @@ df_4clusters_scaled %>%
 
 ```{r}
 # DBSCAN
-df_planets <- read_csv(here('data_clustered', 'hclustering', 'planets_clustered.csv'), skip=1, col_names=c('col1', 'col2', 'col3', 'col4', 'cluster'), show_col_types=FALSE)
+df_planets <- read_csv(here('lab4', 'data_clustered', 'dbscan', 'planets_clustered.csv'), skip=1, col_names=c('col1', 'col2', 'col3', 'col4', 'cluster'), show_col_types=FALSE)
 
 df_planets_scaled <- df_planets %>%
   mutate(
@@ -66,7 +66,7 @@ layout(scene = list(title = '3D Cluster Visualization'))
 
 ```{r}
 # DBSCAN
-df_iris <- read_csv(here('data_clustered', 'hclustering', 'iris_clustered.csv'), skip=1, col_names=c('col1', 'col2', 'col3', 'col4', 'col5', 'cluster'), show_col_types=FALSE)
+df_iris <- read_csv(here('lab4', 'data_clustered', 'dbscan', 'iris_clustered.csv'), skip=1, col_names=c('col1', 'col2', 'col3', 'col4', 'col5', 'cluster'), show_col_types=FALSE)
 
 df_iris_scaled <- df_iris %>%
   mutate(

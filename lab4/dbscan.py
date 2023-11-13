@@ -101,7 +101,7 @@ def main(argv):
    
     D['cluster'] = None
     # with open(f".\\results_dbscan\\{name[:-4]}.out.txt", "w") as f:
-    with open(f"/results_dbscan/{name[:-4]}.out.txt", "w") as f:
+    with open(f"./results_dbscan/{name[:-4]}.out.txt", "w") as f:
         f.write(f"Output for python3 {' '.join(argv)}\n\n")
 
         if distance == 1:
@@ -144,7 +144,7 @@ def main(argv):
             f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
 
     # D.to_csv(f".\\data_clustered\\dbscan\\{name[:-4]}_clustered.csv", index=False)
-    D.to_csv(f"/data_clustered/dbscan/{name[:-4]}_clustered.csv", index=False)
+    D.to_csv(f"./data_clustered/dbscan/{name[:-4]}_clustered.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)

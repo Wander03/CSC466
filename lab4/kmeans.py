@@ -145,7 +145,7 @@ def main(argv):
 
     D['cluster'] = None
     # with open(f".\\results_kmeans\\{name[:-4]}.out.txt", "w") as f:
-    with open(f"/results_kmeans/{name[:-4]}.out.txt", "w") as f:
+    with open(f"./results_kmeans/{name[:-4]}.out.txt", "w") as f:
         f.write(f"Output for python3 {' '.join(argv)}\n\n")
         f.write(f'Initial Centroid: {"Random" if distance == 0 else "K-means++"}\n')
 
@@ -190,14 +190,14 @@ def main(argv):
             f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
 
         # D.to_csv(f".\\data_clustered\\kmeans\\{name[:-4]}_clustered.csv", index=False)
-        D.to_csv(f"/data_clustered/kmeans/{name[:-4]}_clustered.csv", index=False)
+        D.to_csv(f"./data_clustered/kmeans/{name[:-4]}_clustered.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)
 
 
-# python3 kmeans.py data/4clusters.csv 4 1 1 0 1
-# python3 kmeans.py data/AccidentsSet03.csv 0.4 3 1 1
-# python3 kmeans.py data/iris.csv 0.12 6 1 1
-# python3 kmeans.py data/mammal_milk.csv 0.3 3 1 1
-# python3 kmeans.py data/planets.csv 0.2 2 1 1
+# python3 kmeans.py data/4clusters.csv 4 1 1 1 0.2
+# python3 kmeans.py data/AccidentsSet03.csv 5 1 1 1 0.6
+# python3 kmeans.py data/iris.csv 3 1 1 1 0.4
+# python3 kmeans.py data/mammal_milk.csv 4 1 1 1 0.4
+# python3 kmeans.py data/planets.csv 4 1 1 1 0.4
