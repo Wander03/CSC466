@@ -11,8 +11,8 @@ Description:
     How to run: python3 kmeans.py 
                     <input file: consists of data to build classifier> 
                     [OPTIONAL: threshold: threshold at which the program will "cut" the cluster hierarchy to report the clusters]
-                    <distance metric: 1 - eucledian, 2 - manhattan, 3 - cosine sim>
-                    <min-max standardization: 1 - preform, 0 - do not preform>
+                    <distance metric: 1 - euclidean, 2 - manhattan, 3 - cosine sim>
+                    <min-max standardization: 1 - perform, 0 - do not perform>
 """
 import pandas as pd
 import numpy as np
@@ -70,13 +70,13 @@ def h_clustering(D, D_filtered, dist, stand):
 
     # Compute distance matrix
     if dist == 1:
-        dist_matrix = D_filtered.apply(euclidean_dist, args=(D_filtered,True), axis=1)
+        dist_matrix = D_filtered.apply(euclidean_dist, args=(D_filtered, True), axis=1)
         np.fill_diagonal(dist_matrix.values, np.inf)
     elif dist == 2:
-        dist_matrix = D_filtered.apply(manhattan_dist, args=(D_filtered,True), axis=1)
+        dist_matrix = D_filtered.apply(manhattan_dist, args=(D_filtered, True), axis=1)
         np.fill_diagonal(dist_matrix.values, np.inf)
     else:
-        dist_matrix = D_filtered.apply(cosine_sim, args=(D_filtered,True), axis=1)
+        dist_matrix = D_filtered.apply(cosine_sim, args=(D_filtered, True), axis=1)
         np.fill_diagonal(dist_matrix.values, -np.inf)
 
     # Create clusters
@@ -126,13 +126,15 @@ def main(argv):
     root = h_clustering(D, D_filtered, distance, standardize)
     dendrogram = {'type': 'root', 'height': root.get_height(), 'nodes':[create_dendrogram(root.get_children()[0]), create_dendrogram(root.get_children()[1])]}
 
-    with open(f".\\dendrograms\\{name[:-4]}Dendrogram.json", "w") as f:
+    # with open(f".\\dendrograms\\{name[:-4]}Dendrogram.json", "w") as f:
+    with open(f"/dendrograms/{name[:-4]}Dendrogram.json", "w") as f:
         f.write(json.dumps(dendrogram, indent=4))
 
     if flag:
         D['cluster'] = None
         clusters = cut_dendrogram(root, threshold)
-        with open(f".\\results_hclustering\\{name[:-4]}.out.txt", "w") as f:
+        # with open(f".\\results_hclustering\\{name[:-4]}.out.txt", "w") as f:
+        with open(f"/results_hclustering/{name[:-4]}.out.txt", "w") as f:
             f.write(f"Output for python3 {' '.join(argv)}\n\n")
 
             if distance == 1:
@@ -140,9 +142,9 @@ def main(argv):
             elif distance == 2:
                 f.write(f'Distance Metric: Manhattan Distance\n')
             else:
-                f.write(f'Distance Metric: Cosine Simularity\n')
+                f.write(f'Distance Metric: Cosine Similarity\n')
 
-            f.write(f'Standardization: {"Min-Max Standardization" if standardize else "None"}\n')
+            f.write(f'Standardization: {"Min-Max" if standardize else "None"}\n')
             f.write(f'Threshold: {threshold}\n\n')
 
             f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
@@ -176,7 +178,15 @@ def main(argv):
                 f.write('\n')
                 f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
     
-        D.to_csv(f".\\data_clustered\\hclustering\\{name[:-4]}_clustered.csv", index=False)
+        # D.to_csv(f".\\data_clustered\\hclustering\\{name[:-4]}_clustered.csv", index=False)
+        D.to_csv(f"/data_clustered/hclustering/{name[:-4]}_clustered.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)
+
+
+# python3 hclustering.py data/4clusters.csv 0.3 1 1
+# python3 hclustering.py data/AccidentsSet03.csv 0.50 1 1
+# python3 hclustering.py data/iris.csv 0.26 1 1
+# python3 hclustering.py data/mammal_milk.csv 0.45 1 1
+# python3 hclustering.py data/planets.csv 0.35 1 1

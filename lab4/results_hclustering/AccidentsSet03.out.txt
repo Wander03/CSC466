@@ -1,12 +1,12 @@
-Output for python3 hclustering.py .\data\AccidentsSet03.csv .50 1 1
+Output for python3 hclustering.py data/AccidentsSet03.csv 0.50 1 1
 
 Distance Metric: Euclidean Distance
-Standardization: Min-Max Standardization
+Standardization: Min-Max
 Threshold: 0.5
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 0
+Cluster 0:
 Center: 0.07407407407407407,0.16666666666666666,0.0,0.037037037037037035,0.2345679012345679,
 Max Dist. to Center: 0.6590210879714692
 Min Dist. to Center: 0.21069195266513593
@@ -44,7 +44,7 @@ SSE for Cluster: 3.353909465020576
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 1
+Cluster 1:
 Center: 0.08243727598566307,0.3548387096774194,1.0,0.0,0.22580645161290322,
 Max Dist. to Center: 0.7857396033164448
 Min Dist. to Center: 0.19856921960004847
@@ -86,7 +86,7 @@ SSE for Cluster: 4.330147351652728
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 2
+Cluster 2:
 Center: 0.05555555555555555,0.0,1.0,0.5,0.0,
 Max Dist. to Center: 0.05555555555555555
 Min Dist. to Center: 0.05555555555555555
@@ -99,7 +99,7 @@ SSE for Cluster: 0.006172839506172839
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 3
+Cluster 3:
 Center: 1.0,0.0,1.0,0.0,0.3333333333333333,
 Max Dist. to Center: 0.0
 Min Dist. to Center: 0.0
@@ -111,7 +111,7 @@ SSE for Cluster: 0.0
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 4
+Cluster 4:
 Center: 0.0,0.0,1.0,1.0,1.0,
 Max Dist. to Center: 0.0
 Min Dist. to Center: 0.0

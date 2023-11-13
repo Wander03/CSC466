@@ -11,9 +11,9 @@ Description:
     How to run: python3 kmeans.py 
                     <input file: consists of data to build classifier> 
                     <K: number of neighbors to consider> 
-                    <initial centroid selection: 0 - random, 1 - Kmeans++>
-                    <distance metric: 1 - eucledian, 2 - manhattan, 3 - cosine sim>
-                    <min-max standardization: 1 - preform, 0 - do not preform>
+                    <initial centroid selection: 0 - random, 1 - kmeans++>
+                    <distance metric: 1 - euclidean, 2 - manhattan, 3 - cosine sim>
+                    <min-max standardization: 1 - perform, 0 - do not perform>
                     <stoppage threshold: min (or max for cosine sim) movement of centroids before stopping>
 """
 import pandas as pd
@@ -26,7 +26,7 @@ def euclidean_dist(d1, d2, df=False):
     """
     d1: point 1
     d2: point 2
-    df: if points are Data Frames
+    df: if points are DataFrames
     """
     if df:
         return d2.apply(lambda row: np.sqrt(np.sum((d1.to_numpy() - row.to_numpy()) ** 2)), axis=1)
@@ -68,7 +68,7 @@ def k_means_plusplus(D, k, dist):
         for i in range(2, k):
             # Iterate through all points x in D and find the point x s.t. the sum of distances from x to the previously selected centroids (m1, m2, ..., m_i-1) is maximum
             centroids[i] = np.argmax(distances[centroids[:i]].apply(lambda row: np.sum(row), axis=1))
-            # So this points cannot be selected as a centroids again
+            # So these points cannot be selected as a centroids again
             distances.loc[centroids[i], centroids[:i]] = 0
     else:
         centroids[0], centroids[1] = np.unravel_index(np.argmin(distances), distances.shape)
@@ -112,7 +112,7 @@ def k_means(D, k, initial, dist, stand, epsilon):
         for j in range(k):
             m[j] = cl[j].mean()
 
-        # Stoppage Conditions
+        # Stoppage conditions
         if np.array_equal(np.sort(m), np.sort(m_old)):
             flag = False
         
@@ -144,7 +144,8 @@ def main(argv):
     clusters = k_means(D_filtered, K, initial_cluster, distance, standardize, epsilon)
 
     D['cluster'] = None
-    with open(f".\\results_kmeans\\{name[:-4]}.out.txt", "w") as f:
+    # with open(f".\\results_kmeans\\{name[:-4]}.out.txt", "w") as f:
+    with open(f"/results_kmeans/{name[:-4]}.out.txt", "w") as f:
         f.write(f"Output for python3 {' '.join(argv)}\n\n")
         f.write(f'Initial Centroid: {"Random" if distance == 0 else "K-means++"}\n')
 
@@ -153,9 +154,9 @@ def main(argv):
         elif distance == 2:
             f.write(f'Distance Metric: Manhattan Distance\n')
         else:
-            f.write(f'Distance Metric: Cosine Simularity\n')
+            f.write(f'Distance Metric: Cosine Similarity\n')
 
-        f.write(f'Standardization: {"Min-Max Standardization" if standardize else "None"}\n')
+        f.write(f'Standardization: {"Min-Max" if standardize else "None"}\n')
         f.write(f'Stoppage Threshold: {epsilon}\n\n')
 
         f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
@@ -188,7 +189,15 @@ def main(argv):
             f.write('\n')
             f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
 
-        D.to_csv(f".\\data_clustered\\kmeans\\{name[:-4]}_clustered.csv", index=False)
+        # D.to_csv(f".\\data_clustered\\kmeans\\{name[:-4]}_clustered.csv", index=False)
+        D.to_csv(f"/data_clustered/kmeans/{name[:-4]}_clustered.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)
+
+
+# python3 kmeans.py data/4clusters.csv 4 1 1 0 1
+# python3 kmeans.py data/AccidentsSet03.csv 0.4 3 1 1
+# python3 kmeans.py data/iris.csv 0.12 6 1 1
+# python3 kmeans.py data/mammal_milk.csv 0.3 3 1 1
+# python3 kmeans.py data/planets.csv 0.2 2 1 1

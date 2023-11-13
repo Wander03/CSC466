@@ -1,15 +1,15 @@
-Output for python3 dbscan.py data/4clusters.csv 4 2 1 0
+Output for python3 dbscan.py data/4clusters.csv 0.1 2 1 1
 
 Distance Metric: Euclidean Distance
-Standardization: None
+Standardization: Min-Max
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 Cluster 1:
-Center: 41.111111111111114,41.77777777777778,
-Max Dist. to Center: 4.275973645531965
-Min Dist. to Center: 0.7856742013183874
-Avg Dist. to Center: 2.9117006199139848
-SSE for Cluster: 86.44444444444443
+Center: 0.9002849002849003,0.9104938271604939,
+Max Dist. to Center: 0.11127332903982987
+Min Dist. to Center: 0.02179197501268506
+Avg Dist. to Center: 0.07761594060660192
+SSE for Cluster: 0.061120648371360616
 
 9 Points:
 41,45,
@@ -25,11 +25,11 @@ SSE for Cluster: 86.44444444444443
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 Cluster 2:
-Center: 9.9,37.8,
-Max Dist. to Center: 4.3416586692184795
-Min Dist. to Center: 0.9219544457292896
-Avg Dist. to Center: 3.4299301473944324
-SSE for Cluster: 128.5
+Center: 0.09999999999999999,0.8,
+Max Dist. to Center: 0.11849634421645952
+Min Dist. to Center: 0.02373622919145095
+Avg Dist. to Center: 0.09178732329118308
+SSE for Cluster: 0.09265651252830741
 
 10 Points:
 10,42,
@@ -46,11 +46,11 @@ SSE for Cluster: 128.5
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 Cluster 3:
-Center: 36.6,22.2,
-Max Dist. to Center: 2.9999999999999996
-Min Dist. to Center: 0.8944271909999159
-Avg Dist. to Center: 2.2357848571905343
-SSE for Cluster: 28.000000000000004
+Center: 0.7846153846153847,0.36666666666666664,
+Max Dist. to Center: 0.07929049280033958
+Min Dist. to Center: 0.024474907800472366
+Avg Dist. to Center: 0.059326035807227416
+SSE for Cluster: 0.019641683103221556
 
 5 Points:
 39,24,
@@ -62,11 +62,11 @@ SSE for Cluster: 28.000000000000004
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
 Cluster 4:
-Center: 35.857142857142854,10.857142857142858,
-Max Dist. to Center: 6.858630790947314
-Min Dist. to Center: 1.4285714285714313
-Avg Dist. to Center: 4.206662942639405
-SSE for Cluster: 151.71428571428572
+Center: 0.7655677655677656,0.05158730158730159,
+Max Dist. to Center: 0.17586895076677767
+Min Dist. to Center: 0.037757377523971174
+Avg Dist. to Center: 0.10918360430496417
+SSE for Cluster: 0.1016705279525792
 
 7 Points:
 31,13,

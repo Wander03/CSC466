@@ -1,12 +1,12 @@
-Output for python3 hclustering.py .\data\4clusters.csv .3 1 1
+Output for python3 hclustering.py data/4clusters.csv 0.3 1 1
 
 Distance Metric: Euclidean Distance
-Standardization: Min-Max Standardization
+Standardization: Min-Max
 Threshold: 0.3
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 0
+Cluster 0:
 Center: 0.9002849002849005,0.9104938271604939,
 Max Dist. to Center: 0.11127332903982966
 Min Dist. to Center: 0.021791975012685087
@@ -26,7 +26,7 @@ SSE for Cluster: 0.06112064837136061
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 1
+Cluster 1:
 Center: 0.1517094017094017,0.8009259259259259,
 Max Dist. to Center: 0.3355020293765956
 Min Dist. to Center: 0.005098939125098443
@@ -49,7 +49,7 @@ SSE for Cluster: 0.26497400589280934
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 2
+Cluster 2:
 Center: 0.6965811965811965,0.22993827160493824,
 Max Dist. to Center: 0.3227567549556373
 Min Dist. to Center: 0.05906684941050807

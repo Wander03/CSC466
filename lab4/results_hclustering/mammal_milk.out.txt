@@ -1,12 +1,12 @@
-Output for python3 hclustering.py .\data\mammal_milk.csv 0.45 1 1
+Output for python3 hclustering.py data/mammal_milk.csv 0.45 1 1
 
 Distance Metric: Euclidean Distance
-Standardization: Min-Max Standardization
+Standardization: Min-Max
 Threshold: 0.45
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 0
+Cluster 0:
 Center: 0.8033966033966035,0.4254079254079253,0.161529933481153,0.6620553359683794,0.3068181818181819,
 Max Dist. to Center: 0.807875667517807
 Min Dist. to Center: 0.03712080851960147
@@ -39,7 +39,7 @@ Elephant,70.7,3.6,17.6,5.6,0.63,
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 1
+Cluster 1:
 Center: 0.58021978021978,1.0,0.2951219512195122,0.27536231884057966,1.0,
 Max Dist. to Center: 0.0
 Min Dist. to Center: 0.0
@@ -51,7 +51,7 @@ Rabbit,71.3,12.3,13.1,1.9,2.3,
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 2
+Cluster 2:
 Center: 0.01648351648351648,0.8162393162393162,0.9134146341463414,0.06521739130434782,0.2681818181818182,
 Max Dist. to Center: 0.13707875897962535
 Min Dist. to Center: 0.1370787589796252

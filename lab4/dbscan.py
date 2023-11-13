@@ -9,15 +9,17 @@ Name(s):
 
 Description:
     How to run: python3 dbscan.py 
-                    <input file: consists of data to build classifier> 
-                    [OPTIONAL: threshold: threshold at which the program will "cut" the cluster hierarchy to report the clusters]
-                    <distance metric: 1 - eucledian, 2 - manhattan, 3 - cosine sim>
-                    <min-max standardization: 1 - preform, 0 - do not preform>
+                    <input file: consists of data to build classifier>
+                    <epsilon: radius in which data points are considered to be neighbors>
+                    <min_points: number of neighbors required for a data point to be a core point>
+                    <distance metric: 1 - euclidean, 2 - manhattan, 3 - cosine sim>
+                    <min-max standardization: 1 - perform, 0 - do not perform>
 """
 import pandas as pd
 import numpy as np
 from sys import argv
 from kmeans import euclidean_dist, manhattan_dist, cosine_sim
+
 
 class DBSCANClustering():
     def __init__(self, D_filtered, epsilon, min_points, distance, standardize): 
@@ -83,8 +85,8 @@ class DBSCANClustering():
 def main(argv):
     D = pd.read_csv(argv[1], skiprows=[0], header=None, dtype=str)
     restriction = pd.read_csv(argv[1], nrows=1, header=None).iloc[0].to_list()
-    epsilon = int(argv[2])
-    min_points = float(argv[3])
+    epsilon = float(argv[2])
+    min_points = int(argv[3])
     distance = int(argv[4])
     standardize = bool(int(argv[5]))
 
@@ -96,9 +98,10 @@ def main(argv):
     clustering = DBSCANClustering(D_filtered, epsilon, min_points, distance, standardize)
     res = clustering.dbscan()
     clusters = res[0]
-    print(res)
    
-    with open(f".\\results_dbscan\\{name[:-4]}.out.txt", "w") as f:
+    D['cluster'] = None
+    # with open(f".\\results_dbscan\\{name[:-4]}.out.txt", "w") as f:
+    with open(f"/results_dbscan/{name[:-4]}.out.txt", "w") as f:
         f.write(f"Output for python3 {' '.join(argv)}\n\n")
 
         if distance == 1:
@@ -106,9 +109,9 @@ def main(argv):
         elif distance == 2:
             f.write(f'Distance Metric: Manhattan Distance\n')
         else:
-            f.write(f'Distance Metric: Cosine Simularity\n')
+            f.write(f'Distance Metric: Cosine Similarity\n')
 
-        f.write(f'Standardization: {"Min-Max Standardization" if standardize else "None"}\n')
+        f.write(f'Standardization: {"Min-Max" if standardize else "None"}\n')
 
         f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
         for cluster, points in clusters.items():
@@ -131,7 +134,6 @@ def main(argv):
             f.write(f'SSE for Cluster: {np.sum(np.array(dists)**2)}\n\n')
             f.write(f'{len(points)} Points:\n')
 
-            D['cluster'] = None
             for x in points:
                 D['cluster'].iloc[x] = cluster
                 for i in D.drop('cluster', axis=1).iloc[x].to_list():
@@ -141,12 +143,15 @@ def main(argv):
             f.write('\n')
             f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
 
-    D.to_csv(f".\\data_clustered\\dbscan\\{name[:-4]}_clustered.csv", index=False)
+    # D.to_csv(f".\\data_clustered\\dbscan\\{name[:-4]}_clustered.csv", index=False)
+    D.to_csv(f"/data_clustered/dbscan/{name[:-4]}_clustered.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)
 
-# python3 dbscan.py data/4clusters.csv 4 2 1 0
 
-
-    
+# python3 dbscan.py data/4clusters.csv 0.1 2 1 1
+# python3 dbscan.py data/AccidentsSet03.csv 0.4 3 1 1
+# python3 dbscan.py data/iris.csv 0.12 6 1 1
+# python3 dbscan.py data/mammal_milk.csv 0.3 3 1 1
+# python3 dbscan.py data/planets.csv 0.2 2 1 1

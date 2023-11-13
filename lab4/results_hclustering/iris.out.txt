@@ -1,12 +1,12 @@
-Output for python3 hclustering.py .\data\iris.csv .26 1 1
+Output for python3 hclustering.py data/iris.csv 0.26 1 1
 
 Distance Metric: Euclidean Distance
-Standardization: Min-Max Standardization
+Standardization: Min-Max
 Threshold: 0.26
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 0
+Cluster 0:
 Center: 0.1961111111111111,0.5908333333333333,0.07864406779661015,0.06000000000000001,
 Max Dist. to Center: 0.48792791949563047
 Min Dist. to Center: 0.02079349825613116
@@ -67,7 +67,7 @@ SSE for Cluster: 1.8449596453498882
 
 -+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
 
-Cluster 1
+Cluster 1:
 Center: 0.5449999999999999,0.3633333333333333,0.6620338983050847,0.6566666666666667,
 Max Dist. to Center: 0.6702191020020616
 Min Dist. to Center: 0.0647211726780973
