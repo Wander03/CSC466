@@ -98,6 +98,8 @@ def main(argv):
     clustering = DBSCANClustering(D_filtered, epsilon, min_points, distance, standardize)
     res = clustering.dbscan()
     clusters = res[0]
+    outliers = res[2]
+    perc = (len(outliers)/len(D_filtered)) * 100
    
     D['cluster'] = None
     # with open(f".\\results_dbscan\\{name[:-4]}.out.txt", "w") as f:
@@ -142,6 +144,14 @@ def main(argv):
 
             f.write('\n')
             f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
+
+        f.write(f'{len(outliers)} Outliers ' + f'({perc}% of data):\n')
+        for x in outliers:
+            for i in D.drop('cluster', axis=1).iloc[x].to_list():
+                f.write(f'{i},')
+            f.write('\n')
+        f.write('\n')
+        f.write('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-\n\n')
 
     # D.to_csv(f".\\data_clustered\\dbscan\\{name[:-4]}_clustered.csv", index=False)
     D.to_csv(f"./data_clustered/dbscan/{name[:-4]}_clustered.csv", index=False)
