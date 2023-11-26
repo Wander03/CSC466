@@ -211,7 +211,7 @@ def main():
             print('Specify KNN Parameter')
             return None
 
-    D = pd.read_csv(args[1])
+    D = pd.read_csv(args[1], header=None)
     eval_list(D, method, infile, KNN)
 
 if __name__ == "__main__":
