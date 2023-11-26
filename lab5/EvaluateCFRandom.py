@@ -121,7 +121,7 @@ def eval_random(D, method, size, repeats, KNN):
     item_means = D_NaN.mean(axis=0)
     user_means = D_NaN.mean(axis=1)
 
-    for i in range(repeats):
+    for j in range(repeats):
 
         actual = []
         predicted = []
@@ -176,6 +176,8 @@ def eval_random(D, method, size, repeats, KNN):
             f1 = 2 * (prec * rec) / (prec + rec)
         acc = (tp + tn) / (tp + fp + tn + fn)
 
+        print('-'*80)
+        print(f'Rep: {j+1}')
         print(res)
         print()
         print(conf_matrix)
@@ -187,7 +189,12 @@ def eval_random(D, method, size, repeats, KNN):
         print(f'Recall: {rec}')
         print(f'F1-Score: {f1}')
         print()
+        print('-' * 80)
 
+    print()
+    print(f'Overall MAE: {pd.Series(res_mae).mean()}')
+    print()
+    print('-' * 80)
 
 def main():
     args = sys.argv
@@ -221,7 +228,7 @@ def main():
 
     D = pd.read_csv(args[1])
     eval_random(D, method, size, repeats, KNN)
-    
+
 
 if __name__ == "__main__":
     main()
