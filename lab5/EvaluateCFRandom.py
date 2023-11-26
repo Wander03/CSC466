@@ -232,7 +232,7 @@ def main():
     else:
         KNN = 0
 
-    D = pd.read_csv(args[1], header=None)
+    D = pd.read_csv(args[1], header=None).drop(0, axis=1)
     eval_random(D, method, size, repeats, KNN)
 
 
