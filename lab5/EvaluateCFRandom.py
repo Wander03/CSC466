@@ -114,7 +114,7 @@ def eval_random(D, method, size, repeats, KNN):
     res_delta = []
 
     users = pd.Series(range(D.shape[0]))
-    items = pd.Series(range(D.shape[1]))
+    items = pd.Series(range(D.shape[1])).drop(0)
 
     D_prime = D.replace(99, 0)
     D_NaN = D.replace(99, None)
