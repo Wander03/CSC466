@@ -111,6 +111,7 @@ def calc_rating(u, i, D, D_prime, D_NaN, user_means, item_means, method, KNN=0):
 
 def eval_random(D, method, size, repeats, KNN):
     res_mae = []
+    res_delta = []
 
     users = pd.Series(range(D.shape[0]))
     items = pd.Series(range(D.shape[1]))
@@ -145,6 +146,7 @@ def eval_random(D, method, size, repeats, KNN):
                 y = pd.DataFrame({'userID': u, 'itemID': i, 'Actual_Rating': val, 'Predicted_Rating': pred,
                                   'Delta_Rating': val - pred}, index=[num - 1])
                 res = pd.concat([res, y], axis=0)
+                res_delta.extend(y['Delta_Rating'].to_list())
 
         actual = pd.Series(actual)
         predicted = pd.Series(predicted)
@@ -192,7 +194,11 @@ def eval_random(D, method, size, repeats, KNN):
         print('-' * 80)
 
     print()
-    print(f'Overall MAE: {pd.Series(res_mae).mean()}')
+    print(f'Mean MAE: {pd.Series(res_mae).mean()}')
+    print(f'SD MAE: {pd.Series(res_mae).std()}')
+    print()
+    print(f'Mean Dalta Rating: {pd.Series(res_delta).mean()}')
+    print(f'SD Dalta Rating: {pd.Series(res_delta).std()}')
     print()
     print('-' * 80)
 
