@@ -12,49 +12,66 @@ Description:
     It also implements two similarity score computations for a pair of vectors: cosine similarity and okapi
 """
 from __future__ import annotations
+import pandas as pd
 import numpy as np
 
 
-class Cluster:
-    def __init__(self, centroid, size):
-        self.centroid = centroid
-        self.s = [0] * size
-        self.num = 0
-        self.points = []
+class Vector:
+    def __init__(self, author, tfidf_series, size):
+        self.author = author
+        self.tfidf_series = tfidf_series
+        self.size = size
 
-    def __lt__(self, other: Cluster) -> bool:
+    def __lt__(self, other: Vector) -> bool:
         return self.num < other.num
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Cluster):
+        if not isinstance(other, Vector):
             return False
         else:
-             return self.centroid == other.centroid
+             return self.tfidf_series == other.tfidf_series and self.author == other.author
 
     def __repr__(self) -> str:
-        return f'(Centroid: {self.centroid})'
+        return f'Author: {self.author}\nSize: {self.size}\n{self.tfidf_series}'
     
     def __str__(self) -> str:
-        return f'(Centroid: {self.centroid}\nSum: {self.s}\nPoints: {self.points})'
+        return f'Author: {self.author}\nSize: {self.size}\n{self.tfidf_series}'
 
-    def get_centroid(self) -> list:
-        return self.centroid
-
-    def get_points(self) -> list:
-        return self.points
+    def get_author(self):
+        return self.author
+        
+    def get_tfidf_series(self):
+        return self.tfidf_series
     
-    def get_num(self) -> int:
-        return self.num
+    def get_size(self):
+        return self.size
 
-    def add(self, i: int, x: list) -> None:
-        self.num += 1
-        self.s = [val + self.s[index] for index, val in enumerate(x)]
-        self.points.append(i)
-    
-    def remove(self, i: int, x: list) -> None:
-        self.num -= 1
-        self.s = [self.s[index] - val for index, val in enumerate(x)]
-        self.points.remove(i)
+    def cosine_similarity(self, other):
+        shared_words = self.tfidf_series.index.intersection(other.tfidf_series.index)
 
-    def mean(self) -> list:
-        return np.divide(self.s, self.num)
+        dot_prod = np.sum(self.tfidf_series[shared_words] * other.tfidf_series[shared_words])
+        mag_self = np.linalg.norm(self.tfidf_series.values)
+        mag_other = np.linalg.norm(other.tfidf_series.values)
+
+        return  dot_product / (magnitude_self * magnitude_other + 1e-10)
+
+    def okapi_similarity(self, other, df, avdl, k1=1.5, b=.75, k2=500):
+        """
+        Compensates for the disparity in the size between two comapred documents
+        # Inputs
+            - self, other: Vector class objects
+            - df: document frequency of all words in all documents in D
+            - avdl: average length (in bytes) of a document in D
+            - k1: normalization parameter for self (1.0 - 2.0)
+            - b: normalization parameter for document length (usually 0.75)
+            - k2 normalization parameter for other (1 - 1000)
+        """
+        shared_words = self.tfidf_series.index.intersection(other_vector.tfidf_series.index)
+
+        sim = np.sum(
+            np.log((np.sum(self.tfidf_series.items) - df[shared_words] + 0.5) / (df[shared_words] + 0.5)) 
+            * (((k1 + 1) * self.tfidf_series[shared_words]) / (k1 * (1 - b + b * (self.size / avdl)) + self.tfidf_series[shared_words]))
+            * (((k2 + 1) * other.tfidf_series[shared_words]) / (k2 + other.tfidf_series[shared_words]))
+        )
+
+        return sim
