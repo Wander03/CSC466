@@ -45,5 +45,3 @@ The output of each program is printed to the terminal.
 To write output to a specific out file do:
 
 	python3 program.py arg_1 ... arg_n >> output_file.txt
-
-
