@@ -53,25 +53,28 @@ class Vector:
         mag_self = np.linalg.norm(self.tfidf_series.values)
         mag_other = np.linalg.norm(other.tfidf_series.values)
 
-        return  dot_product / (magnitude_self * magnitude_other + 1e-10)
+        return  dot_prod / (mag_self * mag_other + 1e-10)
 
-    def okapi_similarity(self, other, df, avdl, k1=1.5, b=.75, k2=500):
+    def okapi_similarity(self, other, f, df, avdl, k1=1.5, b=.75, k2=500):
         """
         Compensates for the disparity in the size between two comapred documents
         # Inputs
             - self, other: Vector class objects
+            - f: term frequency of word in each document
             - df: document frequency of all words in all documents in D
             - avdl: average length (in bytes) of a document in D
             - k1: normalization parameter for self (1.0 - 2.0)
             - b: normalization parameter for document length (usually 0.75)
             - k2 normalization parameter for other (1 - 1000)
         """
-        shared_words = self.tfidf_series.index.intersection(other_vector.tfidf_series.index)
+        shared_words = self.tfidf_series.index.intersection(other.tfidf_series.index)
 
         sim = np.sum(
             np.log((np.sum(self.tfidf_series.items) - df[shared_words] + 0.5) / (df[shared_words] + 0.5)) 
-            * (((k1 + 1) * self.tfidf_series[shared_words]) / (k1 * (1 - b + b * (self.size / avdl)) + self.tfidf_series[shared_words]))
-            * (((k2 + 1) * other.tfidf_series[shared_words]) / (k2 + other.tfidf_series[shared_words]))
+            * (((k1 + 1) * f[shared_words]) / (k1 * (1 - b + b * (self.size / avdl)) + self.tfidf_series[shared_words]))
+            * (((k2 + 1) * f[shared_words]) / (k2 + other.tfidf_series[shared_words]))
         )
 
         return sim
+
+# NOTE: ASK ABOUT ln()
