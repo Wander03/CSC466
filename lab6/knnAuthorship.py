@@ -16,6 +16,7 @@ Description:
 import pandas as pd
 import numpy as np
 from sys import argv
+from Vector import Vector
 
 
 def knn_classifier(D, C, k, dist):
@@ -32,15 +33,26 @@ def knn_classifier(D, C, k, dist):
     return predictions
 
 def main(argv):
-    # UPDATE THIS
-    D = pd.read_csv(argv[1], skiprows=[1, 2], dtype=str)
-    K = int(argv[3])
-    dist = int(argv[4])
+    ground_truth = pd.read_csv('./vectorized_data/ground_truth.csv')
+    df = pd.read_csv('./vectorized_data/doc_freqs.csv')
+    tf = pd.read_csv('./vectorized_data/term_freqs.csv')
+    tf_idf = pd.read_csv('./vectorized_data/tf_idf.csv')
+    f = Vector(ground_truth['file'][1], ground_truth['author'][1], tf.iloc[1], tf_idf.iloc[1], ground_truth['size'][1])
+    g = Vector(ground_truth['file'][0], ground_truth['author'][0], tf.iloc[0], tf_idf.iloc[0], ground_truth['size'][0]) 
+    avg = ground_truth['size'].mean()
+    print(g.okapi_similarity(f, df, avg))
+    breakpoint()
+    # fix okapi? ordering of docs consistent?
 
-    predictions = knn_classifier_same(D_clean, A, C, K, dist) if flag else knn_classifier_different(D_clean, A, C, classify.copy(), K, dist)
-    D["pred_class"] = D.index.map(predictions)
+    # # UPDATE THIS
+    # D = pd.read_csv(argv[1], skiprows=[1, 2], dtype=str)
+    # K = int(argv[3])
+    # dist = int(argv[4])
+
+    # predictions = knn_classifier_same(D_clean, A, C, K, dist) if flag else knn_classifier_different(D_clean, A, C, classify.copy(), K, dist)
+    # D["pred_class"] = D.index.map(predictions)
     
-    D.to_csv(f".\\results_KNN\\{name[:-4]}-results.out.csv", index=False)
+    # D.to_csv(f".\\results_KNN\\{name[:-4]}-results.out.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)

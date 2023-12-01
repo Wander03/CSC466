@@ -17,8 +17,10 @@ import numpy as np
 
 
 class Vector:
-    def __init__(self, author, tfidf_series, size):
+    def __init__(self, doc, author, tf, tfidf_series, size):
+        self.doc = doc
         self.author = author
+        self.tf = tf
         self.tfidf_series = tfidf_series
         self.size = size
 
@@ -29,17 +31,23 @@ class Vector:
         if not isinstance(other, Vector):
             return False
         else:
-             return self.tfidf_series == other.tfidf_series and self.author == other.author
+            return self.tfidf_series == other.tfidf_series and self.author == other.author
 
     def __repr__(self) -> str:
-        return f'Author: {self.author}\nSize: {self.size}\n{self.tfidf_series}'
+        return f'Document: {self.doc}\nAuthor: {self.author}\nSize: {self.size}'
     
     def __str__(self) -> str:
-        return f'Author: {self.author}\nSize: {self.size}\n{self.tfidf_series}'
+        return f'Document: {self.doc}\nAuthor: {self.author}\nSize: {self.size}'
+
+    def get_doc(self):
+        return self.doc
 
     def get_author(self):
         return self.author
         
+    def get_tf(self):
+        return self.tf
+
     def get_tfidf_series(self):
         return self.tfidf_series
     
@@ -52,15 +60,14 @@ class Vector:
         dot_prod = np.sum(self.tfidf_series[shared_words] * other.tfidf_series[shared_words])
         mag_self = np.linalg.norm(self.tfidf_series.values)
         mag_other = np.linalg.norm(other.tfidf_series.values)
+        
+        return dot_prod / (mag_self * mag_other + 1e-10)
 
-        return  dot_prod / (mag_self * mag_other + 1e-10)
-
-    def okapi_similarity(self, other, f, df, avdl, k1=1.5, b=.75, k2=500):
+    def okapi_similarity(self, other, df, avdl, k1=1.5, b=.75, k2=500):
         """
         Compensates for the disparity in the size between two comapred documents
         # Inputs
             - self, other: Vector class objects
-            - f: term frequency of word in each document
             - df: document frequency of all words in all documents in D
             - avdl: average length (in bytes) of a document in D
             - k1: normalization parameter for self (1.0 - 2.0)
@@ -70,11 +77,9 @@ class Vector:
         shared_words = self.tfidf_series.index.intersection(other.tfidf_series.index)
 
         sim = np.sum(
-            np.log((np.sum(self.tfidf_series.items) - df[shared_words] + 0.5) / (df[shared_words] + 0.5)) 
-            * (((k1 + 1) * f[shared_words]) / (k1 * (1 - b + b * (self.size / avdl)) + self.tfidf_series[shared_words]))
-            * (((k2 + 1) * f[shared_words]) / (k2 + other.tfidf_series[shared_words]))
+            np.log((np.sum(self.tfidf_series.shape[0]) - df[df['term'].isin(shared_words)]['idf'] + 0.5) / (df[df['term'].isin(shared_words)]['idf'] + 0.5)) 
+            * (((k1 + 1) * self.tf[shared_words]) / (k1 * (1 - b + b * (self.size / avdl)) + self.tf[shared_words]))
+            * (((k2 + 1) * other.tf[shared_words]) / (k2 + other.tf[shared_words]))
         )
-
+        breakpoint()
         return sim
-
-# NOTE: ASK ABOUT ln()
