@@ -77,9 +77,11 @@ class Vector:
         shared_words = self.tfidf_series.index.intersection(other.tfidf_series.index)
 
         sim = np.sum(
-            np.log((np.sum(self.tfidf_series.shape[0]) - df[df['term'].isin(shared_words)]['idf'] + 0.5) / (df[df['term'].isin(shared_words)]['idf'] + 0.5)) 
-            * (((k1 + 1) * self.tf[shared_words]) / (k1 * (1 - b + b * (self.size / avdl)) + self.tf[shared_words]))
-            * (((k2 + 1) * other.tf[shared_words]) / (k2 + other.tf[shared_words]))
+            np.log(
+                (self.tfidf_series.shape[0] - df[df['term'].isin(shared_words)]['idf'].values + 0.5) / (df[df['term'].isin(shared_words)]['idf'] + 0.5).values
+            ) 
+            * (((k1 + 1) * self.tf[shared_words]) / (k1 * (1 - b + b * (self.size / avdl)) + self.tf[shared_words] + 1e-10)).values
+            * (((k2 + 1) * other.tf[shared_words]) / (k2 + other.tf[shared_words])).values
         )
-        breakpoint()
+
         return sim

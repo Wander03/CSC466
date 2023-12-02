@@ -34,7 +34,7 @@ def knn_classifier(D, C, k, dist):
 
 def main(argv):
     ground_truth = pd.read_csv('./vectorized_data/ground_truth.csv')
-    df = pd.read_csv('./vectorized_data/doc_freqs.csv')
+    df = pd.read_csv('./vectorized_data/doc_freqs.csv', na_filter=False)
     tf = pd.read_csv('./vectorized_data/term_freqs.csv')
     tf_idf = pd.read_csv('./vectorized_data/tf_idf.csv')
     f = Vector(ground_truth['file'][1], ground_truth['author'][1], tf.iloc[1], tf_idf.iloc[1], ground_truth['size'][1])
