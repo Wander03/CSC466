@@ -8,16 +8,11 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-    How to run: python3 InduceC45 
-                            <input file> 
-                            <threshold value> 
-                            <1 if gain ratio, 0 if gain> 
-                            <OPTIONAL: restrictions file>
+    Creates trees for RFAuthroship.py
 """
 import pandas as pd
 import numpy as np
 import json
-from sys import argv
 
 
 def entropySub(D, C, a):
@@ -124,32 +119,6 @@ def C45(D, A, C, threshold, ratio):
             T["node"]["edges"].append(edge2)
 
     return T
-            
-def main(argv):
-    D = pd.read_csv(argv[1], skiprows=[1, 2], dtype=str)
-    A = D.columns.to_list()
-    sizes = pd.read_csv(argv[1], skiprows=[0], nrows=1, header=None).iloc[0].to_list()
-    C = pd.read_csv(argv[1], skiprows=[0, 1], nrows=1, header=None)[0][0]
-    name = argv[1].split("/")[-1] if "/" in argv[1] else argv[1].split("\\")[-1]
-
-    try:
-        restrict = pd.read_csv(argv[4], header=None).values.tolist()[0]
-        for a, v in zip(A.copy(), restrict):
-            if v != 1:
-                A.remove(a)
-    except Exception as e:
-        print("No Restriction File Provided (Using All Columns)")
-
-    A = dict(zip(A, sizes))
-    del A[C]
-    for k, v in A.copy().items():
-        if v < 0:
-            del A[k]
-
-    tree = {"dataset": name, **C45(D, A, C, float(argv[2]), int(argv[3]))}
-
-    with open(f".\\trees\\{name[:-4]}Tree.json", "w") as f:
-        f.write(json.dumps(tree, indent=4))
 
 if __name__ == "__main__":
-    main(argv)
+    print("Don't call me... please")
