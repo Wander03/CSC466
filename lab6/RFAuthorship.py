@@ -93,6 +93,7 @@ def main(argv):
     NumTrees = int(argv[3])
     threshold = float(argv[4])
     gain = int(argv[5])
+    outname = argv[6]
 
     A = dict(zip(A, [0] * len(A)))
     del A[C]
@@ -113,7 +114,7 @@ def main(argv):
     plurality_votes = np.vectorize(vote_to_class.get)(np.argmax(votes, axis=1))
     ground_truth["pred_author"] = plurality_votes
 
-    ground_truth.drop(['author', 'size'], axis=1).to_csv(f".\\results_RF\\RF-results.out.csv", index=False)
+    ground_truth.drop(['author', 'size'], axis=1).to_csv(f".\\results_RF\\{outname}.csv", index=False)
 
 if __name__ == "__main__":
     print(datetime.datetime.now())

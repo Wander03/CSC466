@@ -20,20 +20,6 @@ def confusion_matrix(D, C, c):
     D['pred_author'] = pd.Categorical(D['pred_author'], categories=c)
     return(pd.crosstab(D[C], D['pred_author']).reindex(index=c, columns=c, fill_value=0))
 
-def compute_metrics(confusion, accuracy):
-    TP = np.diag(confusion)
-    FP = np.sum(confusion, axis=0) - TP
-    FN = np.sum(confusion, axis=1) - TP
-
-    precision = TP / (TP + FP)
-    recall = TP / (TP + FN)
-    overall_accuracy = np.sum(TP) / np.sum(confusion.to_numpy())
-    average_accuracy = np.mean(accuracy)
-    overall_error_rate =  1 - overall_accuracy
-    average_error_rate = 1 - average_accuracy
-
-    return [precision.fillna(0), recall.fillna(0), overall_accuracy, overall_error_rate, average_accuracy, average_error_rate]
-
 def main(argv):
     ground_truth = pd.read_csv(argv[1]).drop('size', axis=1)
     predictions = pd.read_csv(argv[2])
@@ -52,9 +38,9 @@ def main(argv):
         print('Strikes (false positives):', FP)
         print('Misses (false negatives):', FN)
         if knn:
-            precision = TP / (TP + FP)
+            precision = TP / (TP + FP) if TP + FP != 0 else 0
             recall = TP / (TP + FN)
-            f1 = 2 * (precision * recall) / (precision + recall)
+            f1 = 2 * (precision * recall) / (precision + recall) if precision + recall != 0 else 0
             print('Precision:', precision)
             print('Recall:', recall)
             print('F1-Score:', f1)
