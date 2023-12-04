@@ -52,6 +52,8 @@ def main(argv):
     print('Overall Accuracy:', full_accuracy)
     print('-' * 80)
 
+    full_confusion.insert(0, 'author', full_confusion.columns)
+
     full_confusion.to_csv(f".\\confusion\\confusion_matrix.csv", index=False)
 
 if __name__ == "__main__":
