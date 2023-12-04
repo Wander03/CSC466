@@ -23,7 +23,7 @@ def confusion_matrix(D, C, c):
 def main(argv):
     ground_truth = pd.read_csv(argv[1]).drop('size', axis=1)
     predictions = pd.read_csv(argv[2])
-    knn = bool(argv[3])
+    knn = bool(int(argv[3]))
     combo = ground_truth.merge(predictions, how='left', on='file')
 
     for a in combo['author'].unique():
