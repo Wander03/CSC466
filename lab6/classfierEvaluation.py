@@ -8,7 +8,10 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-
+How to run: python3 RFAuthorship.py
+                    <ground truth file>
+                    <predictions file>
+                    <0 if RF, 1 if KNN>
 """
 import pandas as pd
 import numpy as np

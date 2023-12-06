@@ -8,7 +8,15 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-
+    How to run: python3 RFAuthorship.py
+                    <ground truth file>
+                    <input file: consits of data to build classifier> 
+                    <Num Attributes (per tree)> 
+                    <Num Data Points (per tree)>
+                    <Num Trees (in forest)>
+                    <threshold value> 
+                    <1 if gain ratio, 0 if gain> 
+                    <outfile name>
 """
 import pandas as pd
 import numpy as np
@@ -81,19 +89,19 @@ def random_forest_classifier(D, A, C, threshold, gain, m, k, N):
     return forest
 
 def main(argv):
-    ground_truth = pd.read_csv('./vectorized_data/ground_truth.csv')
-    tf_idf = pd.read_csv('./vectorized_data/tf_idf.csv')
+    ground_truth = pd.read_csv(argv[1])
+    tf_idf = pd.read_csv(argv[2])
     D = ground_truth.drop(['file', 'size'], axis=1).merge(tf_idf, how='left', left_index=True, right_index=True, suffixes=('_real', ''))
 
     A = D.columns.to_list()
     C = 'author_real'
 
-    NumAttributes = int(argv[1])
-    NumDataPoints = int(argv[2])
-    NumTrees = int(argv[3])
-    threshold = float(argv[4])
-    gain = int(argv[5])
-    outname = argv[6]
+    NumAttributes = int(argv[3])
+    NumDataPoints = int(argv[4])
+    NumTrees = int(argv[5])
+    threshold = float(argv[6])
+    gain = int(argv[7])
+    outname = argv[8]
 
     A = dict(zip(A, [0] * len(A)))
     del A[C]

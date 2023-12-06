@@ -8,7 +8,7 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-    How to run: python3 knn.py
+    How to run: python3 knnAuthorship.py
                     <input file: consits of data to build classifier> 
                     <K: number of neighbors to consider> 
                     <distance metric: 0 - cosine, 1 - okapi>
