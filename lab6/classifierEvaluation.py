@@ -8,7 +8,7 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-How to run: python3 RFAuthorship.py
+How to run: python3 classifierEvaluation.py
                     <ground truth file>
                     <predictions file>
                     <0 if RF, 1 if KNN>

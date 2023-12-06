@@ -8,10 +8,24 @@ Name(s):
     Andrew Kerr // adkerr@calpoly.edu
 
 Description:
-    How to run: python3 knnAuthorship.py
-                    <input file: consits of data to build classifier> 
-                    <K: number of neighbors to consider> 
-                    <distance metric: 0 - cosine, 1 - okapi>
+    How to run:
+
+    If Cosine Similarity:
+            python3 knn.py
+                    <ground truth file: consists of >
+                    <tf-idf file: contains tf-idf vectorization of text docs >
+                    <distance metric: 0 - cosine>
+                    <K: number of neighbors to consider>
+
+    If Okapi:
+            python3 knn.py
+                    <ground truth file: contains authorship info for each text doc>
+                    <tf-idf file: contains tf-idf vectorization of text docs>
+                    <distance metric: 0 - cosine>
+                    <K: number of neighbors to consider>
+                    <document frequency file: contains doc frequency for each word in vocab>
+                    <term frequency file: contains tf vectorization of text docs>
+                    <N: number of randomly selected docs to evaluate and predict using KNN>
 """
 import sys
 import time

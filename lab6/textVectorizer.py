@@ -4,6 +4,30 @@ import numpy as np
 import sys
 import os
 from nltk.stem import PorterStemmer
+"""
+Course: CSC 466
+Quarter: Fall 2023
+Assigment: Lab 6
+
+Name(s):
+    Brendan Callender // bscallen@calpoly.edu
+    Andrew Kerr // adkerr@calpoly.edu
+
+Description:
+
+How to run:
+      python3 textVectorizer.py
+               <Path: Path to Directory containing C50 directory>
+               <Out: Out path to write output to>
+
+Example:
+      python3 textVectorizer.py '' out/
+
+      This is an example for when:
+         1. C50 is in the current directory
+         2. You want to write the files to the directory called out
+"""
+
 
 def create_ground_truth(path, out):
     f = open(f'{out}/ground_truth.csv', 'w')
