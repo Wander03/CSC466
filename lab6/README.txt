@@ -9,17 +9,8 @@ Name(s):
 Output Files:
    1. results_KNN   - has predicted authorships from KnnAuthorship.py
    2. results_RF    - has predicted authorships from RFAuthorship.py
-   3. confusion     - has cnofusion matrixes
+   3. confusion     - has confusion matrixes
    4. out           - has distance matrix using cosine similarity
-
-
-Implemented Methods:
-    1: Weighted Sum (User Based)
-    2: Weighted Sum (Item Based)
-    3: Adj Weighted Sum (User Based)
-    4: Adj Weighted Sum (Item Based)
-    5: Weighted Sum w/ KNN (User Based)
-    6: Adj Weighted Sum w/ KNN (User Based)
 
 
 How to run: KnnAuthorship.py
@@ -53,6 +44,14 @@ How to run: RFAuthorship.py
                     <threshold value> 
                     <1 if gain ratio, 0 if gain> 
                     <outfile name>
+
+
+How to run: classifierEvaluation.py
+	
+	python3 classifierEvaluation.py
+                    <ground truth file>
+                    <predictions file>
+                    <0 if RF, 1 if KNN>
 
 
 Output:
