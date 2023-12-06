@@ -54,7 +54,8 @@ def main(argv):
 
     full_confusion.insert(0, 'actual author', full_confusion.columns)
 
-    full_confusion.to_csv(f".\\confusion\\confusion_matrix.csv", index=False)
+    out = argv[2].split("/")[-1] if "/" in argv[2] else argv[2].split("\\")[-1]
+    full_confusion.to_csv(f".\\confusion\\confusion_matrix_{out.split('.csv')[0]}.csv", index=False)
 
 if __name__ == "__main__":
     main(argv)

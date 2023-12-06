@@ -97,7 +97,7 @@ def main():
         temp = ground_truth[['author', 'file']]
         preds = pd.Series(list(predictions.values()))
         temp['prediction'] = preds
-        temp[['file', 'prediction']].to_csv('out/predictions.csv', index=False)
+        temp[['file', 'prediction']].to_csv(f'\\results_KNN\\k_{k}.csv', index=False)
 
 
 if __name__ == "__main__":
