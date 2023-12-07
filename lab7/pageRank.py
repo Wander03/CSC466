@@ -8,7 +8,9 @@ Name(s):
 
 Description:
     How to run:
-
+        python3 pageRank.py
+            <datafile>
+            <OPTIONAL: dampening factor - default = 0.85>
 """
 import pandas as pd
 import numpy as np
