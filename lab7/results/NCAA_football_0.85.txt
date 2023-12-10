@@ -1,5 +1,5 @@
-Read Time: 0.09852719306945801
-Processing Time: 0.05823254585266113
+Read Time: 0.0942389965057373
+Processing Time: 0.05271029472351074
 Number of Iterations: 196
 
 Damping Factor: 0.85

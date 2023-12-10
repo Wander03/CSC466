@@ -10,11 +10,11 @@ Description:
     How to run:
         python3 pageRank.py
             <datafile>
-            <OPTIONAL: dampening factor - default = 0.85>
+            <OPTIONAL: damping factor - default = 0.85>
 """
 import pandas as pd
 import numpy as np
-from sys import argv, stdout
+from sys import argv
 import time
 
 
@@ -29,17 +29,15 @@ def adjacency_matrix(df):
             node1, score1, node2, score2 = row
             if score1 > score2:
                 adjacency_matrix.loc[node2, node1] = 1
-            # elif score1 == 0 and score2 == 0:
-            #     adjacency_matrix.loc[node1, node2] = 1
-            #     adjacency_matrix.loc[node2, node1] = 1
+            else:
+                adjacency_matrix.loc[node1, node2] = 1
     except:
         for index, row in df.iterrows():
             node1, score1, node2, score2, _ = row
             if score1 > score2:
                 adjacency_matrix.loc[node2, node1] = 1
-            # elif score1 == 0 and score2 == 0:
-            #     adjacency_matrix.loc[node1, node2] = 1
-            #     adjacency_matrix.loc[node2, node1] = 1
+            else:
+                adjacency_matrix.loc[node1, node2] = 1
     
     return adjacency_matrix
 
@@ -96,7 +94,7 @@ def main():
     df_rank.sort_values(by='Rank', inplace=True)
 
     out = argv[1].split("/")[-1] if "/" in argv[1] else argv[1].split("\\")[-1]
-    with open(f'results\\{out[:-4]}.txt', 'w') as f:
+    with open(f'results\\{out[:-4]}_{d}.txt', 'w') as f:
         stdout = f
         print('Read Time:', end_read - start_read, file=stdout)
         print('Processing Time:', end_processing - start_processing, file=stdout)

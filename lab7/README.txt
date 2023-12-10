@@ -7,11 +7,11 @@ Name(s):
 
 
 Output Files:
-   1. results folder    - results printed, file name is inFile_dampeningFactor
+   1. results folder    - results printed, file name is inFile_dampingFactor
 
 
 How to run: pageRank.py
 	
     python3 pageRank.py
         <datafile>
-        <OPTIONAL: dampening factor - default = 0.85>
+        <OPTIONAL: damping factor - default = 0.85>
