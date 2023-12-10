@@ -43,7 +43,7 @@ def adjacency_matrix(df):
 
 def transition_matrix(adjacency_matrix, d):
     n = adjacency_matrix.shape[0]
-    out_links = adjacency_matrix.sum(axis=1).replace(0, 1)
+    out_links = adjacency_matrix.sum(axis=1).replace(0, 1) #axis=0 instead?
     transition_matrix = (d * (adjacency_matrix.T / out_links)).T + (1 - d) / n
     return transition_matrix
 
